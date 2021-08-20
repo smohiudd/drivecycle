@@ -1,0 +1,34 @@
+
+#!/bin/bash
+
+set -e
+
+if [[ -n "${CI}" ]]; then
+    set -x
+fi
+
+function usage() {
+    echo -n \
+        "Usage: $(basename "$0")
+Execute project linters.
+"
+}
+
+EC_EXCLUDE="(__pycache__|.git|.coverage|coverage.xml|.*\.egg-info|.mypy_cache|.tif|.tiff)"
+
+DIRS_TO_CHECK=("drivecycle" "tests" "scripts")
+
+if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+    if [ "${1:-}" = "--help" ]; then
+        usage
+    else
+        # Text formatting
+        ec --exclude "$EC_EXCLUDE"
+        # Code formatting
+        yapf -dpr ${DIRS_TO_CHECK[@]}
+        # Lint
+        flake8 ${DIRS_TO_CHECK[@]}
+        # Type checking
+        mypy src
+    fi
+fi
