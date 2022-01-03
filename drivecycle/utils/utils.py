@@ -1,4 +1,5 @@
 import networkx as nx
+from typing import List, Dict, Any, Tuple
 
 
 class Graph:
@@ -9,7 +10,8 @@ class Graph:
     Returns:
          Networkx Graph class
     """
-    def __init__(self, edges):
+
+    def __init__(self, edges: List[Dict[str, Any]]):
 
         G = nx.path_graph(len(edges) + 1)
         i = 0
@@ -42,10 +44,12 @@ class Graph:
         self.target = len(edges)
         self.edges = edges
 
-    def get_source_target(self, ):
+    def get_source_target(self) -> Tuple[int, int]:
         return (self.source, self.target)
 
-    def simplify_graph(self, filters=["tertiary", "secondary"]):
+    def simplify_graph(
+            self,
+            filters: List[str] = ["tertiary", "secondary"]) -> 'nx.Graph[Any]':
         """Utility function to simplify graph by mergeing adjacent edges with the same speed
 
         Args:
@@ -63,9 +67,9 @@ class Graph:
                 e1 = H[u][n[0]]
                 e2 = H[u][n[1]]
 
-                if  e1["intersection"]==e2["intersection"] and \
+                if e1["intersection"] == e2["intersection"] and \
                     any(x in e1["intersection"] for x in filters) and \
-                    e1["speed"]==e2["speed"] and \
+                    e1["speed"] == e2["speed"] and \
                     (e1["length"] < 10 or e2["length"] < 10):
 
                     sum_length = e1["length"] + e2["length"]
@@ -80,8 +84,9 @@ class Graph:
                                intersection=e1["intersection"])
                     H.remove_node(u)
 
-                elif e1["speed"]==e2["speed"] and \
-                    (not any(x in e1["intersection"] for x in filters) and "intersection" in e1) and \
+                elif e1["speed"] == e2["speed"] and \
+                    (not any(x in e1["intersection"] for x in filters)
+                                            and "intersection" in e1) and \
                     (not any(x in e2["intersection"] for x in filters) and "intersection" in e2):
 
                     sum_length = e1["length"] + e2["length"]
@@ -103,7 +108,7 @@ class Graph:
         return H
 
 
-def include_stops(H, stops=[]):
+def include_stops(H: 'nx.Graph[Any]', stops: List[int]) -> 'nx.Graph[Any]':
     """Utility function to insert bus stop location in graph
 
     Args:
@@ -157,7 +162,8 @@ def include_stops(H, stops=[]):
     return J
 
 
-def get_edges(G, nodes):
+def get_edges(G: 'nx.Graph[Any]', nodes: Tuple[int,
+                                               int]) -> List[Dict[str, Any]]:
     """Utility function to get list of edges in the following format:
 
     [{'way_id': [1, 2], 'speed': 20, 'length': 100, 'intersection': ['bus_stop']},
@@ -175,7 +181,6 @@ def get_edges(G, nodes):
          nodes: tuple of source and target nodes
     Returns:
          List of edges
-         
     """
     edges = []
     for path in sorted(nx.all_simple_edge_paths(G, nodes[0], nodes[1])):

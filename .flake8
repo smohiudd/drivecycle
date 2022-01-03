@@ -12,4 +12,4 @@ max-line-length = 100
 # E126: Continuation line over-indented for hanging indent
 # Conflicts with yapf formatting
 
-ignore = E127,W503,W504,E126
+ignore = E127,W503,W504,E126, E125, E129,E722

@@ -2,18 +2,43 @@
 
 ### Create a drive cycle for a transit route
 
+#### Installation
+
+Install the package in editable mode:
+
+```pip install -e ./```
+
 #### Import libraries
 
-```python 
-from transit_drivecycle import drivecycle
-from transit_drivecycle import utils
+```python
+from drivecycle.trajectory import Trajectory
+from drivecycle.drivecycle import Drivecycle
+from drivecycle import utils
 ```
+
+#### Plot Simple Tragectories
+
+```python
+traj = Trajectory(v_target=20,df=100,step=0.1)
+traj.const_accel()
+```
+
+Plot distance and time charts
+
+```traj.plot_vt()```
+
+VT Plot
+
+```traj.plot_dt()```
+
+DT Plot
+
 
 #### Sample input
 
 ```intersection``` denotes end node intersect edge type. For example ```"intersection":["primary"]``` indicates a primary road intersecting the end node.
 
-```python 
+```python
 edges = [
     {
         "way_id":1,
@@ -60,7 +85,7 @@ route_graph = utils.Graph(edges)
 #We simplify the graph by merging adjacent edges with the same speed
 simplified_route_graph = route_graph.simplify_graph()
 
-graph_with_stops = utils.include_stops(simplified_route_graph,stops) 
+graph_with_stops = utils.include_stops(simplified_route_graph,stops)
 ```
 
 #### Generate drive cycle
