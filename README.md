@@ -1,26 +1,27 @@
-## Drive Cycle
+# Drive Cycle
 
-### Create a drive cycle for a transit route
+Create a drive cycle for a transit route
 
-#### Installation
+## Installation
 
 Install the package in editable mode:
 
 ```pip install -e ./```
 
-#### Import libraries
+## Import libraries
 
 ```python
-from drivecycle.trajectory import Trajectory
-from drivecycle.drivecycle import Drivecycle
-from drivecycle import utils
+from drivecycle import drivecycle, trajectory
+from drivecycle.utils import plots
 ```
 
-#### Plot Simple Tragectories
+## Plot Simple Tragectories
 
 ```python
-traj = Trajectory(v_target=20,df=100,step=0.1)
-traj.const_accel()
+traj = trajectory.Trajectory(vi=5, v_target=12, vf=8, di=0, df=150, step=0.1)
+traj_values = traj.const_accel(a_max=1).get_trajectory()
+
+plots.plot_vt(traj_values, "plot_vt.png")
 ```
 
 ##### Velocity - Distance Plot
@@ -38,7 +39,7 @@ traj.const_accel()
 
 #### Sample input
 
-```intersection``` denotes end node intersect edge type. For example ```"intersection":["primary"]``` indicates a primary road intersecting the end node.
+Edges are created using OpenStreetMap (OSM) taxonomy. `intersection` denotes end node intersect edge type as used in OSM. For example `"intersection":["primary"]` indicates a primary road intersecting the end node.
 
 ```python
 edges = [
