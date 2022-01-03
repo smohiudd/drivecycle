@@ -23,15 +23,17 @@ traj = Trajectory(v_target=20,df=100,step=0.1)
 traj.const_accel()
 ```
 
-Plot distance and time charts
+Velocity - Distance Plot
 
-```traj.plot_vt()```
+![VD-Plot](/images/plot_vd.png)
 
-VT Plot
+Velocity - Time Plot
 
-```traj.plot_dt()```
+![VT-Plot](/images/plot_vt.png)
 
-DT Plot
+Distance - Time Plot
+
+![DT-Plot](/images/plot_dt.png)
 
 
 #### Sample input
