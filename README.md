@@ -23,15 +23,15 @@ traj = Trajectory(v_target=20,df=100,step=0.1)
 traj.const_accel()
 ```
 
-Velocity - Distance Plot
+##### Velocity - Distance Plot
 
 ![VD-Plot](/images/plot_vd.png)
 
-Velocity - Time Plot
+##### Velocity - Time Plot
 
 ![VT-Plot](/images/plot_vt.png)
 
-Distance - Time Plot
+##### Distance - Time Plot
 
 ![DT-Plot](/images/plot_dt.png)
 
@@ -99,3 +99,15 @@ stop={"bus_stop":30,"tertiary":10}
 # Generate route drive cycle
 route_drive_cycle = drivecycle.get_drivecycle(graph_with_stops,stops=stop, stop_at_node=True, step=1)
 ```
+
+#### Velocity - Distance Plot
+
+![VD-Plot](/images/drivecycle_vd.png)
+
+##### Velocity - Time Plot
+
+![VT-Plot](/images/drivecycle_vt.png)
+
+##### Distance - Time Plot
+
+![DT-Plot](/images/drivecycle_dt.png)
