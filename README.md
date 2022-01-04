@@ -17,7 +17,7 @@ from drivecycle.utils import plots
 
 ### Plot Simple Tragectories
 
-The 'Trajectory' class can be used to generate a trajectory given some contraints such as distance, acceleration and start/end/target velocities. The current release only models constant acceleration trajectories however other models may be added in future. 
+The `Trajectory` class can be used to generate a trajectory given some contraints such as distance, acceleration and start/end/target velocities. This current release only models constant acceleration trajectories however other models may be added in future. 
 
 ```python
 traj = trajectory.Trajectory(vi=5, v_target=12, vf=8, di=0, df=150, step=0.1)
@@ -41,7 +41,7 @@ plots.plot_vt(traj_values, "plot_vt.png")
 
 ### Generate Drive Cycle
 
-Trajectories are grouped together to form drive cycles of given path. See [sample](#sample-path-input) drive cycle input path. The `Drivecycle` class may include a `stops` parameter which constrains which nodes (i.e. street interseciton or bus stops) the vehicle must stop at and for how long. 
+Trajectories are grouped together to form drive cycles of a given path. See [sample](#sample-path-input) drive cycle input path. The `Drivecycle` class may include a `stops` parameter that constrains which nodes (i.e. street interseciton or bus stops) the vehicle must stop at and for how long. 
 
 ```python
 # What nodes should we stop at and for how long (seconds)
@@ -110,7 +110,7 @@ path = [
 
 ### Generate Path Graph
 
-Drive Cycle include utils that can used to generate graphs usting `networkx`. These are helpful to simplify path graphs to reduce redundant nodes and edges that may break the `Trajectory` or `Drivecycle` classes. It can also be used to embed stop in a give path graph. 
+Drive Cycle include utils that can used to generate graphs usting `networkx`. These are helpful to simplify path graphs to reduce redundant nodes and edges that may break the `Trajectory` or `Drivecycle` classes. It can also be used to embed stops in a give path graph. 
 
 ```python
 
