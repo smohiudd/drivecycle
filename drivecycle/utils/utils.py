@@ -13,33 +13,7 @@ class Graph:
 
     def __init__(self, edges: List[Dict[str, Any]]):
 
-        G = nx.path_graph(len(edges) + 1)
-        i = 0
-        x = 0
-        for u, v in G.edges:
-            if u == 0:
-                G[u][v]['way_id'] = [edges[i]["way_id"]]
-                G[u][v]['speed'] = edges[i]["speed"]
-                G[u][v]['length'] = edges[i]["length"]
-                G[u][v]["intersection"] = edges[i]["intersection"]
-
-                G.nodes[v]["intersection"] = edges[i]["intersection"]
-                G.nodes[v]["LR"] = x + edges[i]["length"]
-                G.nodes[u]["intersection"] = [None]
-                G.nodes[u]["LR"] = 0
-            else:
-                G[u][v]['way_id'] = [edges[i]["way_id"]]
-                G[u][v]['speed'] = edges[i]["speed"]
-                G[u][v]['length'] = edges[i]["length"]
-                G[u][v]["intersection"] = edges[i]["intersection"]
-
-                G.nodes[v]["intersection"] = edges[i]["intersection"]
-                G.nodes[v]["LR"] = x + edges[i]["length"]
-
-            i += 1
-            x = G.nodes[v]["LR"]
-
-        self.init_graph = G
+        self.init_graph = dict_to_graph(edges)
         self.source = 0
         self.target = len(edges)
         self.edges = edges
@@ -130,7 +104,7 @@ def include_stops(H: 'nx.Graph[Any]', stops: List[int]) -> 'nx.Graph[Any]':
 
             for stop in bus_stops:
                 J.add_node(stop,
-                           intersection="bus_stop",
+                           intersection=["bus_stop"],
                            LR=float(stop.split('-')[1]))
 
             stops1 = [u, *bus_stops, v]
@@ -188,3 +162,25 @@ def get_edges(G: 'nx.Graph[Any]', nodes: Tuple[int,
             edges.append(G[i[0]][i[1]])
 
     return edges
+
+def dict_to_graph(data_):
+
+    G = nx.path_graph(len(data_) + 1)
+    keys = list(data_[0].keys())
+    x = 0
+    intersection = [None]
+
+    for i, (u, v) in enumerate(G.edges):
+        for key in keys:
+            G[u][v][key] = data_[i][key]
+        
+        G.nodes[u]["intersection"] = intersection
+        G.nodes[u]["LR"] = x
+        
+        G.nodes[v]["intersection"] = data_[i]["intersection"]
+        G.nodes[v]["LR"] = x+data_[i]["length"]
+        
+        x = G.nodes[v]["LR"]
+        intersection = G.nodes[v]["intersection"]
+
+    return G
