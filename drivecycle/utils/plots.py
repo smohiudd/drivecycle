@@ -8,7 +8,7 @@ def plot(v: Any, i: Any, savepath: str, labels: List[str] = ["velocity", "time"]
     plt.rcParams['savefig.facecolor']='white'
     plt.rcParams.update({'font.size': 14})
     plt.figure(figsize=(15, 8))
-    plt.plot(i, v, color='#4b0082', linewidth=2.5)
+    plt.plot(i, v, color='#4b0082', linewidth=1.5)
     plt.xlabel(labels[1])
     plt.ylabel(labels[0])
 

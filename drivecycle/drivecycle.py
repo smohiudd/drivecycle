@@ -3,6 +3,10 @@ from drivecycle import trajectory
 
 from typing import List, Dict, Any
 
+import logging
+
+logging.getLogger().setLevel(logging.INFO)
+
 
 class Drivecycle:
 
@@ -35,6 +39,7 @@ class Drivecycle:
         di = self.di
         ti = self.ti
         vi = self.vi
+        a = self.a_max
 
         for i in range(len(self.edges)):
 
@@ -45,7 +50,7 @@ class Drivecycle:
 
             try:
                 v_target_next = self.edges[i + 1]["speed"] * conversion
-            except:
+            except IndexError as e:
                 v_target_next = 0
 
             v_target = self.edges[i]["speed"] * conversion
@@ -57,6 +62,7 @@ class Drivecycle:
 
             if stop:
                 vf = 0
+                a = 2
             else:
                 if v_target_next >= v_target:
                     vf = v_target
@@ -70,7 +76,15 @@ class Drivecycle:
                                          df=df,
                                          ti=ti,
                                          step=self.step)
-            d = traj.const_accel(a_max=self.a_max).get_trajectory()
+            # d = traj.const_accel(a_max=self.a_max).get_trajectory()
+
+            try:
+                d = traj.const_accel(a_max=a).get_trajectory()
+            except AssertionError as e:
+                # tf = (df-di)/((vf+vi)/2)
+                tf = (df-di)*vi #Constant veclocity using initial
+                d = np.array([[ti,vi,di],[tf,vi,df]])
+                logging.info(f'Could not complete segment: vi: {vi:.2f} , vf: {vf:.2f}, v_target:{v_target:.2f}, length: {self.edges[i]["length"]:.2f}')
 
             # if len(d)==0:
             #     continue

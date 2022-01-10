@@ -27,10 +27,10 @@ class Trajectory:
         t = self.ti
 
         assert np.abs(pow(self.vf, 2) - pow(self.vi, 2)) / 2 < a_max * (
-            self.df - self.di), "Trajectory is not possible given inputs."
+            self.df - self.di), "Error 1: Trajectory is not possible given inputs."
         assert np.sqrt(
             (self.df - self.di) / a_max
-        ) * 2 > 1, "Trapezoidal trajectory is not possible given inputs."
+        ) * 2 > 1, "Error 2: Trapezoidal trajectory is not possible given inputs."
 
         if (self.df - self.di) * a_max > (pow(self.v_target, 2) - (
             (pow(self.vi, 2) + pow(self.vf, 2)) / 2)):
