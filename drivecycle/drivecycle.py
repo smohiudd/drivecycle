@@ -40,6 +40,7 @@ class Drivecycle:
         ti = self.ti
         vi = self.vi
         a = self.a_max
+        keys = list(self.stops.keys())
 
         for i in range(len(self.edges)):
 
@@ -90,8 +91,9 @@ class Drivecycle:
             #     continue
 
             if stop:
-
-                stop_max_time = self.stops[self.edges[i]["intersection"][0]]
+                
+                stop_id = next(x for x in keys if x in self.edges[i]["intersection"])
+                stop_max_time = self.stops[stop_id]
                 stop_time = np.random.randint(5, stop_max_time)
 
                 x = np.linspace(d[-1][0], d[-1][0] + stop_time, 5)
