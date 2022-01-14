@@ -49,9 +49,9 @@ class Graph:
         """Utility function to get list of edges in the following format:
         """
         edges = []
-        for path in sorted(nx.all_simple_edge_paths(self.graph, self.source, self.target)):
-            for i in path:
-                edges.append(self.graph[i[0]][i[1]])
+
+        for u, v in nx.bfs_edges(self.graph, self.source):
+            edges.append(self.graph[u][v])
 
         return edges
 

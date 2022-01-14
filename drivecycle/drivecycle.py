@@ -24,6 +24,8 @@ def sequential(edges: List[Dict[str, Any]],
 
     keys = list(stops.keys())
 
+    a = a_max
+
     for i in range(len(edges)):
 
         if kmh:
@@ -60,7 +62,8 @@ def sequential(edges: List[Dict[str, Any]],
                                 di=di,
                                 df=df,
                                 ti=ti,
-                                step=step)
+                                step=step,
+                                a_max=a)
         except AssertionError as e:
             tf = (df-di)*vi #Constant veclocity using initial
             d = np.array([[ti,vi,di],[tf,vi,df]])
