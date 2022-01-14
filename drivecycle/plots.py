@@ -17,7 +17,6 @@ def plot(v: Any, i: Any, savepath: str, labels: List[str] = ["velocity", "time"]
     
     plt.show()
 
-   
 
 
 def plot_vt(tvq: Any, savepath: str) -> None:

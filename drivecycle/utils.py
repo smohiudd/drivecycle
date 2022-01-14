@@ -47,22 +47,6 @@ class Graph:
     
     def get_edges(self) -> List[Dict[str, Any]]:
         """Utility function to get list of edges in the following format:
-
-        [{'way_id': [1, 2], 'speed': 20, 'length': 100, 'intersection': ['bus_stop']},
-        {'way_id': [1, 2], 'speed': 20, 'length': 145, 'intersection': ['primary']},
-        {'way_id': [3], 'speed': 50, 'length': 122, 'intersection': ['bus_stop']},
-        {'way_id': [3], 'speed': 50, 'length': 28, 'intersection': ['primary']},
-        {'way_id': [4], 'speed': 50, 'length': 100, 'intersection': ['secondary']},
-        {'way_id': [5],
-        'speed': 20,
-        'length': 100,
-        'intersection': ['service', 'service']}]
-
-        Args:
-            H: Networkx Graph object
-            nodes: tuple of source and target nodes
-        Returns:
-            List of edges
         """
         edges = []
         for path in sorted(nx.all_simple_edge_paths(self.graph, self.source, self.target)):
@@ -71,7 +55,7 @@ class Graph:
 
         return edges
 
-    def consolidate_intersections(self, filters = ["tertiary","secondary", "bus_stop"]):
+    def consolidate_intersections(self, filters = ["tertiary","secondary","bus_stop"]):
     
         H = self.graph.copy()
 
@@ -94,7 +78,7 @@ class Graph:
                 l2 = e2["length"]
 
                 if l1<100 and any(x in H.nodes[n]["intersection"] for x in filters) and any(x in H.nodes[u[0]]["intersection"] for x in filters):
-                    print(H.nodes[u[0]]["intersection"],H.nodes[n]["intersection"])
+                    # print(H.nodes[u[0]]["intersection"],H.nodes[n]["intersection"])
                     H.add_edge(u[0],
                         v[1],
                         way_id=e1["way_id"] + e2["way_id"],
@@ -105,7 +89,7 @@ class Graph:
                     H.remove_node(n)
 
                 elif l2<100 and any(x in H.nodes[n]["intersection"] for x in filters) and any(x in H.nodes[v[1]]["intersection"] for x in filters):
-                    print(H.nodes[v[1]]["intersection"],H.nodes[n]["intersection"])
+                    # print(H.nodes[v[1]]["intersection"],H.nodes[n]["intersection"])
                     H.add_edge(u[0],
                     v[1],
                     way_id=e1["way_id"] + e2["way_id"],
@@ -125,7 +109,7 @@ class Graph:
     def simplify_graph(
             self,
             filters: List[str] = ["tertiary", "secondary","bus_stop"]) -> 'nx.Graph[Any]':
-        """Utility function to simplify graph by mergeing adjacent edges with the same speed
+        """Utility function to simplify graph by merging adjacent edges with the same speed
         Args:
             filers: list of intersections that should NOT be merged
         Returns:
@@ -208,40 +192,4 @@ class Graph:
         return J
 
 
-def simplify_graph(
-        G,
-        filters: List[str] = ["tertiary", "secondary","bus_stop"]) -> 'nx.Graph[Any]':
-    """Utility function to simplify graph by mergeing adjacent edges with the same speed
-    Args:
-        filers: list of intersections that should NOT be merged
-    Returns:
-        Networkx Graph class
-    """
-
-    H = G.copy()
-
-    for u, v, d in G.edges.data():
-        n = list(H.neighbors(u))
-
-        if len(n) == 2:
-            e1 = H[u][n[0]]
-            e2 = H[u][n[1]]
-
-            if e1["speed"] == e2["speed"] and \
-                not any(x in e1["intersection"] for x in filters):
-
-                sum_length = e1["length"] + e2["length"]
-                speed = e1["speed"]
-                way_ids = e1["way_id"] + e2["way_id"]
-                intersections = e1["intersection"] + e2["intersection"]
-
-                H.add_edge(n[0],
-                        n[1],
-                        way_id=way_ids,
-                        speed=speed,
-                        length=sum_length,
-                        intersection=intersections)
-                H.remove_node(u)
-
-    return H
 
