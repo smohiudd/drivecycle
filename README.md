@@ -11,8 +11,7 @@ Install the package in editable mode:
 ### Import libraries
 
 ```python
-from drivecycle import drivecycle, trajectory
-from drivecycle.utils import plots
+from drivecycle import drivecycle, trajectory, utils, plots
 ```
 
 ### Plot Simple Tragectories
@@ -20,10 +19,9 @@ from drivecycle.utils import plots
 The `Trajectory` class can be used to generate a trajectory given some contraints such as distance, acceleration and start/end/target velocities. This current release only models constant acceleration trajectories however other models may be added in future. 
 
 ```python
-traj = trajectory.Trajectory(vi=5, v_target=12, vf=8, di=0, df=150, step=0.1)
-traj_values = traj.const_accel(a_max=1).get_trajectory()
+traj = trajectory.const_accel(vi=5, v_target=12, vf=8, di=0, df=150, step=0.1)
 
-plots.plot_vt(traj_values, "plot_vt.png")
+plots.plot_vt(traj, "plot_vt.png")
 ```
 
 ##### Velocity - Distance Plot
@@ -48,7 +46,7 @@ Trajectories are grouped together to form drive cycles of a given path. See [sam
 stop={"bus_stop":30,"tertiary":10}
 
 # Generate route drive cycle
-route_drive_cycle = drivecycle.get_drivecycle(path, stops=stop, stop_at_node=True, step=0.1)
+route_drive_cycle = drivecycle.sequential(edges, stops=stop, stop_at_node=True, step=0.1)
 ```
 
 #### Velocity - Distance Plot
@@ -110,7 +108,7 @@ path = [
 
 ### Generate Path Graph
 
-Drive Cycle include utils that can used to generate graphs usting `networkx`. These are helpful to simplify path graphs to reduce redundant nodes and edges that may break the `Trajectory` or `Drivecycle` classes. It can also be used to embed stops in a give path graph. 
+Drive Cycle include utils that can used to generate graphs usting `networkx`. These are helpful to simplify path graphs to reduce redundant nodes and edges that may cause trajectories to fail. It can also be used to embed stops in a given path graph. 
 
 ```python
 
@@ -118,9 +116,44 @@ stops=[100,367] #linearly referenced stop locations
 
 route_graph = utils.Graph(edges)
 
+route_graph.include_stops(stops)
+route_graph.consolidate_intersections(["tertiary", "secondary", "bus_stop"])
+route_graph.simplify_graph(["tertiary", "secondary", "bus_stop"])
 
-#We simplify the graph by merging adjacent edges with the same speed
-simplified_route_graph = route_graph.simplify_graph()
+route_graph.get_edges()
 
-graph_with_stops = utils.include_stops(simplified_route_graph,stops)
 ```
+
+### Generate Drivecycle using Valhalla Trace Attributes
+
+Valhalla's [map matching API](https://valhalla.readthedocs.io/en/latest/api/map-matching/api-reference/) can be used to match a bus route geometry to OSM way ids. This can help us determine both road speeds and intersection locations along a route. Using the map matching Trace Attributes action, we can get a list of OSM edges the bus route travels along:
+
+```python
+[{'end_node': {'type': 'street_intersection',
+   'elapsed_time': 0.698,
+   'intersecting_edges': [{'road_class': 'service_other',
+     'begin_heading': 204,
+     'to_edge_name_consistency': False,
+     'from_edge_name_consistency': False}]},
+  'length': 0.007,
+  'names': ['48 Avenue NW'],
+  'speed': 35,
+  'way_id': 463682703},
+ {'end_node': {'type': 'street_intersection',
+   'elapsed_time': 7.607,
+   'intersecting_edges': [{'road_class': 'residential',
+     'begin_heading': 131,
+     'to_edge_name_consistency': False,
+     'from_edge_name_consistency': False}]},
+  'length': 0.067,
+  'names': ['48 Avenue NW'],
+  'speed': 35,
+  'way_id': 463682703}
+  .
+  .
+  .
+  ```
+
+Using the drivecycle apis listed above we can then generate a simulation drivecycle of the entire route:
+
+![DT-Plot](/images/route_drivecycle.png)
