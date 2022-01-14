@@ -8,7 +8,7 @@ Install the package in editable mode:
 
 ```pip install -e ./```
 
-### Import libraries
+### Import Module
 
 ```python
 from drivecycle import drivecycle, trajectory, utils, plots
