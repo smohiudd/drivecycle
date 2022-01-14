@@ -20,31 +20,31 @@ class Graph:
 
     def get_source_target(self) -> Tuple[int, int]:
         return (self.source, self.target)
-    
+
     @staticmethod
     def dict_to_graph(data_):
 
         G = nx.path_graph(len(data_) + 1, nx.DiGraph())
         keys = list(data_[0].keys())
-        
+
         x = 0
         intersection = [None]
 
         for i, (u, v) in enumerate(G.edges):
             for key in keys:
                 G[u][v][key] = data_[i][key]
-            
+
             G.nodes[u]["intersection"] = intersection
             G.nodes[u]["LR"] = x
-            
+
             G.nodes[v]["intersection"] = data_[i]["intersection"]
-            G.nodes[v]["LR"] = x+data_[i]["length"]
-            
+            G.nodes[v]["LR"] = x + data_[i]["length"]
+
             x = G.nodes[v]["LR"]
             intersection = G.nodes[v]["intersection"]
 
         return G
-    
+
     def get_edges(self) -> List[Dict[str, Any]]:
         """Utility function to get list of edges in the following format:
         """
@@ -55,48 +55,60 @@ class Graph:
 
         return edges
 
-    def consolidate_intersections(self, filters = ["tertiary","secondary","bus_stop"]):
-    
+    def consolidate_intersections(self,
+                                  filters=[
+                                      "tertiary", "secondary", "bus_stop"
+                                  ]):
+
         H = self.graph.copy()
 
-        for u,v in nx.bfs_successors(self.graph, 0):
-            
+        for u, v in nx.bfs_successors(self.graph, 0):
+
             n = v[0]
-        
+
             in_edge = list(H.in_edges(n))
             out_edge = list(H.out_edges(n))
-            
-            if len(in_edge)>0 and len(out_edge)>0:
-                
+
+            if len(in_edge) > 0 and len(out_edge) > 0:
+
                 u = in_edge[0]
                 v = out_edge[0]
-            
+
                 e1 = H.edges[u]
                 e2 = H.edges[v]
 
                 l1 = e1["length"]
                 l2 = e2["length"]
 
-                if l1<100 and any(x in H.nodes[n]["intersection"] for x in filters) and any(x in H.nodes[u[0]]["intersection"] for x in filters):
+                if l1 < 100 and any(x in H.nodes[n]["intersection"]
+                                    for x in filters) and any(
+                                        x in H.nodes[u[0]]["intersection"]
+                                        for x in filters):
                     # print(H.nodes[u[0]]["intersection"],H.nodes[n]["intersection"])
                     H.add_edge(u[0],
-                        v[1],
-                        way_id=e1["way_id"] + e2["way_id"],
-                        speed=e1["speed"],
-                        length=l1+l2,
-                        intersection=H.nodes[v[1]]["intersection"])
-                    H.nodes[u[0]]["intersection"] = H.nodes[n]["intersection"] + H.nodes[u[0]]["intersection"]
+                               v[1],
+                               way_id=e1["way_id"] + e2["way_id"],
+                               speed=e1["speed"],
+                               length=l1 + l2,
+                               intersection=H.nodes[v[1]]["intersection"])
+                    H.nodes[u[0]]["intersection"] = H.nodes[n][
+                        "intersection"] + H.nodes[u[0]]["intersection"]
                     H.remove_node(n)
 
-                elif l2<100 and any(x in H.nodes[n]["intersection"] for x in filters) and any(x in H.nodes[v[1]]["intersection"] for x in filters):
+                elif l2 < 100 and any(x in H.nodes[n]["intersection"]
+                                      for x in filters) and any(
+                                          x in H.nodes[v[1]]["intersection"]
+                                          for x in filters):
                     # print(H.nodes[v[1]]["intersection"],H.nodes[n]["intersection"])
                     H.add_edge(u[0],
-                    v[1],
-                    way_id=e1["way_id"] + e2["way_id"],
-                    speed=e1["speed"],
-                    length=l1+l2,
-                    intersection=H.nodes[v[1]]["intersection"]+H.nodes[n]["intersection"])
-                    H.nodes[v[1]]["intersection"] = H.nodes[n]["intersection"] + H.nodes[v[1]]["intersection"]
+                               v[1],
+                               way_id=e1["way_id"] + e2["way_id"],
+                               speed=e1["speed"],
+                               length=l1 + l2,
+                               intersection=H.nodes[v[1]]["intersection"] +
+                               H.nodes[n]["intersection"])
+                    H.nodes[v[1]]["intersection"] = H.nodes[n][
+                        "intersection"] + H.nodes[v[1]]["intersection"]
                     H.remove_node(n)
 
                 else:
@@ -105,10 +117,10 @@ class Graph:
         self.graph = H
         return H
 
-
     def simplify_graph(
-            self,
-            filters: List[str] = ["tertiary", "secondary","bus_stop"]) -> 'nx.Graph[Any]':
+        self,
+        filters: List[str] = ["tertiary", "secondary", "bus_stop"]
+    ) -> 'nx.Graph[Any]':
         """Utility function to simplify graph by merging adjacent edges with the same speed
         Args:
             filers: list of intersections that should NOT be merged
@@ -118,18 +130,18 @@ class Graph:
 
         H = self.graph.copy()
 
-        for u,v in nx.bfs_successors(self.graph, 0):
+        for u, v in nx.bfs_successors(self.graph, 0):
 
             n = v[0]
-    
+
             in_edge = list(H.in_edges(n))
             out_edge = list(H.out_edges(n))
 
-            if len(in_edge)>0 and len(out_edge)>0:
+            if len(in_edge) > 0 and len(out_edge) > 0:
 
                 u = in_edge[0]
                 v = out_edge[0]
-        
+
                 e1 = H.edges[u]
                 e2 = H.edges[v]
 
@@ -142,11 +154,11 @@ class Graph:
                     intersections = e1["intersection"] + e2["intersection"]
 
                     H.add_edge(u[0],
-                            v[1],
-                            way_id=way_ids,
-                            speed=speed,
-                            length=sum_length,
-                            intersection=intersections)
+                               v[1],
+                               way_id=way_ids,
+                               speed=speed,
+                               length=sum_length,
+                               intersection=intersections)
                     H.remove_node(n)
 
         self.graph = H
@@ -173,23 +185,20 @@ class Graph:
             if len(bus_stops) > 0:
 
                 for stop in bus_stops:
-                    J.add_node(stop,
-                            intersection=["bus_stop"],
-                            LR=stop)
+                    J.add_node(stop, intersection=["bus_stop"], LR=stop)
 
                 stops1 = [u, *bus_stops, v]
 
-                for i in range(len(stops1)-1):
+                for i in range(len(stops1) - 1):
                     J.add_edge(stops1[i],
-                            stops1[i+1],
-                            way_id=self.graph[u][v]["way_id"],
-                            speed=self.graph[u][v]["speed"],
-                            length=J.nodes[stops1[i+1]]["LR"]-J.nodes[stops1[i]]["LR"],
-                            intersection=J.nodes[stops1[i+1]]["intersection"])
+                               stops1[i + 1],
+                               way_id=self.graph[u][v]["way_id"],
+                               speed=self.graph[u][v]["speed"],
+                               length=J.nodes[stops1[i + 1]]["LR"] -
+                               J.nodes[stops1[i]]["LR"],
+                               intersection=J.nodes[stops1[i +
+                                                           1]]["intersection"])
                 J.remove_edge(u, v)
 
         self.graph = J
         return J
-
-
-

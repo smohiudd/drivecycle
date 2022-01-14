@@ -2,6 +2,7 @@ import math
 import numpy as np
 from typing import Any
 
+
 def const_accel(vi: float = 0.0,
                 v_target: float = 13.0,
                 vf: float = 0.0,
@@ -10,7 +11,6 @@ def const_accel(vi: float = 0.0,
                 ti: float = 0.0,
                 step: float = 0.1,
                 a_max: float = 1.0):
-
 
     tvq = np.array([(ti, vi, di)])
 
@@ -22,11 +22,11 @@ def const_accel(vi: float = 0.0,
         (df - di) / a_max
     ) * 2 > 1, "Error 2: Trapezoidal trajectory is not possible given inputs."
 
-    if (df - di) * a_max > (pow(v_target, 2) - (
-        (pow(vi, 2) + pow(vf, 2)) / 2)):
+    if (df - di) * a_max > (pow(v_target, 2) -
+                            ((pow(vi, 2) + pow(vf, 2)) / 2)):
 
-        Ta = np.abs(v_target - vi
-                    ) / a_max  # Use abs if vi is greater than v_target
+        Ta = np.abs(v_target -
+                    vi) / a_max  # Use abs if vi is greater than v_target
         Td = (v_target - vf) / a_max
         T = ti + ((df - di) / v_target) \
             + ((v_target / (2 * a_max)) * pow((1 - (vi / v_target)), 2)) \
@@ -38,12 +38,10 @@ def const_accel(vi: float = 0.0,
         while t <= T:
             if t >= ti and t < ti + Ta and Ta != 0:  # Acceleration phase
                 v = _accel_v(vi, v_target, Ta, t, ti)
-                q = _accel_q(di, vi, ti, v_target, Ta,
-                            t)
+                q = _accel_q(di, vi, ti, v_target, Ta, t)
             elif t >= ti + Ta and t < T - Td:  # Constant velocity phase
                 v = v_target
-                q = _const_q(di, vi, Ta, v_target, ti,
-                            t)
+                q = _const_q(di, vi, Ta, v_target, ti, t)
             elif t >= T - Td and t <= T:  # Deceleration phase
                 v = _decel_v(vf, v_target, Td, T, t)
                 q = _decel_q(df, vf, T, t, v_target, Td)
@@ -59,8 +57,7 @@ def const_accel(vi: float = 0.0,
             t += step
 
     else:
-        vlim = math.sqrt(((df - di) * a_max) +
-                            ((pow(vi, 2) + pow(vf, 2)) / 2))
+        vlim = math.sqrt(((df - di) * a_max) + ((pow(vi, 2) + pow(vf, 2)) / 2))
         Ta = (vlim - vi) / a_max
         Td = (vlim - vf) / a_max
         T = ti + Ta + Td
@@ -88,28 +85,29 @@ def const_accel(vi: float = 0.0,
 
     return tvq
 
+
 def _accel_q(di: float, vi: float, ti: float, v_target: float, Ta: float,
-            t: float) -> float:
+             t: float) -> float:
     return di + (vi * (t - ti)) + (((v_target - vi) / (2 * Ta)) * pow(
         (t - ti), 2))
 
 
 def _accel_v(vi: float, v_target: float, Ta: float, t: float,
-            ti: float) -> float:
+             ti: float) -> float:
     return vi + ((v_target - vi) / Ta) * (t - ti)
 
 
 def _const_q(di: float, vi: float, Ta: float, v_target: float, ti: float,
-            t: float) -> float:
+             t: float) -> float:
     return di + (vi * (Ta / 2)) + (v_target * (t - ti - (Ta / 2)))
 
 
 def _decel_q(df: float, vf: float, T: float, t: float, v_target: float,
-            Td: float) -> float:
+             Td: float) -> float:
     return df - (vf * (T - t)) - (((v_target - vf) / (2 * Td)) * pow(
         (T - t), 2))
 
 
 def _decel_v(vf: float, v_target: float, Td: float, T: float,
-            t: float) -> float:
+             t: float) -> float:
     return vf + ((v_target - vf) / Td) * (T - t)

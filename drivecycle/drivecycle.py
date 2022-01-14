@@ -7,15 +7,16 @@ import logging
 
 logging.getLogger().setLevel(logging.INFO)
 
+
 def sequential(edges: List[Dict[str, Any]],
-                stops: Dict[str, int],
-                di: float = 0,
-                vi: float = 0,
-                ti: float = 0,
-                a_max: float = 1,
-                step: float = 0.1,
-                stop_at_node: bool = False,
-                kmh: bool = True):
+               stops: Dict[str, int],
+               di: float = 0,
+               vi: float = 0,
+               ti: float = 0,
+               a_max: float = 1,
+               step: float = 0.1,
+               stop_at_node: bool = False,
+               kmh: bool = True):
 
     tvq = np.array([(0, 0, 0)])
 
@@ -41,8 +42,8 @@ def sequential(edges: List[Dict[str, Any]],
         v_target = edges[i]["speed"] * conversion
         df = di + edges[i]["length"]
 
-        if any(x in list(stops.keys()) for x in edges[i]
-                ["intersection"]) and stop_at_node:
+        if any(x in list(stops.keys())
+               for x in edges[i]["intersection"]) and stop_at_node:
             stop = np.random.randint(2)
 
         if stop:
@@ -54,23 +55,24 @@ def sequential(edges: List[Dict[str, Any]],
             else:
                 vf = v_target_next
 
-
         try:
             d = trajectory.const_accel(vi=vi,
-                                v_target=v_target,
-                                vf=vf,
-                                di=di,
-                                df=df,
-                                ti=ti,
-                                step=step,
-                                a_max=a)
+                                       v_target=v_target,
+                                       vf=vf,
+                                       di=di,
+                                       df=df,
+                                       ti=ti,
+                                       step=step,
+                                       a_max=a)
         except AssertionError as e:
-            tf = (df-di)*vi #Constant veclocity using initial
-            d = np.array([[ti,vi,di],[tf,vi,df]])
-            logging.info(f'Could not complete segment: vi: {vi:.2f} , vf: {vf:.2f}, v_target:{v_target:.2f}, length: {edges[i]["length"]:.2f}')
+            tf = (df - di) * vi  #Constant veclocity using initial
+            d = np.array([[ti, vi, di], [tf, vi, df]])
+            logging.info(
+                f'Could not complete segment: vi: {vi:.2f} , vf: {vf:.2f}, v_target:{v_target:.2f}, length: {edges[i]["length"]:.2f}'
+            )
 
         if stop:
-            
+
             stop_id = next(x for x in keys if x in edges[i]["intersection"])
             stop_max_time = stops[stop_id]
             stop_time = np.random.randint(5, stop_max_time)
