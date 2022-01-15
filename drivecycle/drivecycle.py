@@ -18,6 +18,25 @@ def sequential(edges: List[Dict[str, Any]],
                stop_at_node: bool = False,
                kmh: bool = True):
 
+    """Generate route drivecycle.
+
+    Extended description...
+
+    Args:
+        edges (list): list of route edges
+        stops (dict): dict of stops and stop durations
+        di (float): initial position
+        vi (float): initial velocity
+        ti (float): initial time
+        a_max (float): maximum acceleration
+        step (float): time step
+        kmh (bool): kilometers per hour
+
+    Returns:
+        list: Time, Velocity, Distance of trajectory
+
+    """
+
     tvq = np.array([(0, 0, 0)])
 
     stop = None

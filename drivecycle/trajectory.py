@@ -12,6 +12,25 @@ def const_accel(vi: float = 0.0,
                 step: float = 0.1,
                 a_max: float = 1.0):
 
+    """Generate trajectory using constant acceleration model.
+
+    Extended description...
+
+    Args:
+        vi (float): initial velocity
+        v_target (float): target velocity
+        vf (float): final velocity
+        di (float): initial position
+        df (float): final position
+        ti (float): initial time
+        step (float): time step
+        a_max (float): maximum acceleration
+        
+    Returns:
+        list: Time, Velocity, Distance of trajectory
+
+    """
+
     tvq = np.array([(ti, vi, di)])
 
     t = ti

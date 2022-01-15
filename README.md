@@ -39,7 +39,7 @@ plots.plot_vt(traj, "plot_vt.png")
 
 ### Generate Drive Cycle
 
-Trajectories are grouped together to form drive cycles of a given path. See [sample](#sample-path-input) drive cycle input path. The `Drivecycle` class may include a `stops` parameter that constrains which nodes (i.e. street interseciton or bus stops) the vehicle must stop at and for how long. 
+Trajectories are grouped together to form drive cycles of a given path. See [sample](#sample-path-input) drive cycle input path. The `drivecycle` function may include a `stops` parameter that constrains which nodes (i.e. street interseciton or bus stops) the vehicle must stop at and for how long. 
 
 ```python
 # What nodes should we stop at and for how long (seconds)
