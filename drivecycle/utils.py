@@ -3,12 +3,13 @@ from typing import List, Dict, Any, Tuple
 
 
 class Graph:
-    """Utility class to recreate graph vehicle path
+    """Generate route drivecycle.
+
+    Extended description...
 
     Args:
-         edges: list of dictionaries with with way_id, speed, length and intersection keys
-    Returns:
-         Networkx Graph class
+        edges (list): list of route edges
+
     """
 
     def __init__(self, edges: List[Dict[str, Any]]):
@@ -46,7 +47,11 @@ class Graph:
         return G
 
     def get_edges(self) -> List[Dict[str, Any]]:
-        """Utility function to get list of edges in the following format:
+        """Get list of edges from networkx DiGraph.
+
+        Returns:
+            list: List of dictionaries of route path edges.
+
         """
         edges = []
 
@@ -59,6 +64,14 @@ class Graph:
                                   filters=[
                                       "tertiary", "secondary", "bus_stop"
                                   ]):
+
+        """Consolidate intersections that are clustered together
+
+        Args:
+            filters (list): list intersections to be clustered.
+        Returns:
+            Networkx DiGraph
+        """
 
         H = self.graph.copy()
 
@@ -121,11 +134,12 @@ class Graph:
         self,
         filters: List[str] = ["tertiary", "secondary", "bus_stop"]
     ) -> 'nx.Graph[Any]':
+        
         """Utility function to simplify graph by merging adjacent edges with the same speed
         Args:
-            filers: list of intersections that should NOT be merged
+            filters (list): list of intersections that should NOT be merged
         Returns:
-            Networkx Graph class
+            Networkx DiGraph
         """
 
         H = self.graph.copy()
@@ -165,13 +179,12 @@ class Graph:
         return H
 
     def include_stops(self, stops: List[float]) -> 'nx.Graph[Any]':
-        """Utility function to insert bus stop location in graph
+        """Utility function to insert bus stop location in networkx DiGraph
 
         Args:
-            H: Networkx Graph object
-            stops: List of linear referenced location of bus stops
+            stops (list): List of linear referenced location of bus stops
         Returns:
-            Networkx Graph class
+            Networkx DiGraph
 
         """
         J = self.graph.copy()
