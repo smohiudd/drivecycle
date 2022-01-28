@@ -11,7 +11,6 @@ def const_accel(vi: float = 0.0,
                 ti: float = 0.0,
                 step: float = 0.1,
                 a_max: float = 1.0):
-
     """Generate trajectory using constant acceleration model.
 
     Extended description...

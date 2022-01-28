@@ -17,7 +17,6 @@ def sequential(edges: List[Dict[str, Any]],
                step: float = 0.1,
                stop_at_node: bool = False,
                kmh: bool = True):
-
     """Generate route drivecycle.
 
     Extended description...
