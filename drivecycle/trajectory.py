@@ -13,8 +13,6 @@ def const_accel(vi: float = 0.0,
                 a_max: float = 1.0):
     """Generate trajectory using constant acceleration model.
 
-    Extended description...
-
     Args:
         vi (float): initial velocity
         v_target (float): target velocity
@@ -32,7 +30,7 @@ def const_accel(vi: float = 0.0,
 
     tvq = np.array([(ti, vi, di)])
 
-    t = ti
+    t = ti+step
 
     assert np.abs(pow(vf, 2) - pow(vi, 2)) / 2 < a_max * (
         df - di), "Error 1: Trajectory is not possible given inputs."
@@ -60,7 +58,7 @@ def const_accel(vi: float = 0.0,
             elif t >= ti + Ta and t < T - Td:  # Constant velocity phase
                 v = v_target
                 q = _const_q(di, vi, Ta, v_target, ti, t)
-            elif t >= T - Td and t <= T:  # Deceleration phase
+            elif t >= T - Td and t <= T and Td !=0:  # Deceleration phase
                 v = _decel_v(vf, v_target, Td, T, t)
                 q = _decel_q(df, vf, T, t, v_target, Td)
             elif Ta == 0:  # case when Vi and v_target are equal

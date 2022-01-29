@@ -18,9 +18,7 @@ def sequential(edges: List[Dict[str, Any]],
                stop_at_node: bool = False,
                kmh: bool = True):
     """Generate route drivecycle.
-
-    Extended description...
-
+    
     Args:
         edges (list): list of route edges
         stops (dict): dict of stops and stop durations
@@ -36,7 +34,7 @@ def sequential(edges: List[Dict[str, Any]],
 
     """
 
-    tvq = np.array([(0, 0, 0)])
+    tvq = np.array([(ti, vi, di)])
 
     stop = None
     conversion = 1000 / 3600
@@ -95,17 +93,19 @@ def sequential(edges: List[Dict[str, Any]],
             stop_max_time = stops[stop_id]
             stop_time = np.random.randint(5, stop_max_time)
 
-            x = np.linspace(d[-1][0], d[-1][0] + stop_time, 5)
+            t = np.linspace(d[-1][0]+step, d[-1][0] + stop_time, 5)
             v = np.zeros(5)
             q = np.repeat(d[-1][2], 5)
-            s = np.column_stack((x, v, q))
+            s = np.column_stack((t, v, q))
             d = np.concatenate([d, s])
 
-        tvq = np.concatenate([tvq, d])
-
-        di = tvq[-1][2]
+        di = d[-1][2]
         ti = d[-1][0]
         vi = d[-1][1]
+        
+        tvq = np.concatenate([tvq, d[:-1]])
+
+
         stop = 0
 
-    return tvq
+    return tvq[1:]
