@@ -1,0 +1,6 @@
+sphinx
+sphinx-autobuild
+sphinx-click
+sphinxcontrib-fulltoc
+sphinxcontrib-napoleon
+furo
