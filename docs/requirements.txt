@@ -4,3 +4,7 @@ sphinx-click
 sphinxcontrib-fulltoc
 sphinxcontrib-napoleon
 furo
+numpy
+scipy
+networkx
+matplotlib
