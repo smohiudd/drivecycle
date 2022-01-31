@@ -1,4 +1,4 @@
-name: Publish Python ditributions to PyPI
+name: Publish Python distributions to PyPI
 on:
   push:
     branches:
