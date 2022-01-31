@@ -34,20 +34,273 @@
             
   <section id="reference">
 <h1>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h1>
-<section id="drivecycle-drivecycle-module">
-<h2>drivecycle.drivecycle module<a class="headerlink" href="#drivecycle-drivecycle-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-drivecycle.drivecycle">
+<span id="drivecycle-drivecycle-module"></span><h2>drivecycle.drivecycle module<a class="headerlink" href="#module-drivecycle.drivecycle" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="drivecycle.drivecycle.sequential">
+<span class="sig-prename descclassname"><span class="pre">drivecycle.drivecycle.</span></span><span class="sig-name descname"><span class="pre">sequential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">di</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ti</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_at_node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kmh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#drivecycle.drivecycle.sequential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate route drivecycle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>edges</strong> (<em>list</em>) – list of route edges</p></li>
+<li><p><strong>stops</strong> (<em>dict</em>) – dict of stops and stop durations</p></li>
+<li><p><strong>di</strong> (<em>float</em>) – initial position</p></li>
+<li><p><strong>vi</strong> (<em>float</em>) – initial velocity</p></li>
+<li><p><strong>ti</strong> (<em>float</em>) – initial time</p></li>
+<li><p><strong>a_max</strong> (<em>float</em>) – maximum acceleration</p></li>
+<li><p><strong>step</strong> (<em>float</em>) – time step</p></li>
+<li><p><strong>kmh</strong> (<em>bool</em>) – kilometers per hour</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Time, Velocity, Distance of trajectory</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="drivecycle-energy-module">
-<h2>drivecycle.energy module<a class="headerlink" href="#drivecycle-energy-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-drivecycle.energy">
+<span id="drivecycle-energy-module"></span><h2>drivecycle.energy module<a class="headerlink" href="#module-drivecycle.energy" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="drivecycle.energy.battery_model">
+<span class="sig-prename descclassname"><span class="pre">drivecycle.energy.</span></span><span class="sig-name descname"><span class="pre">battery_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_cells</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.045</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">battery_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'LI-ION'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#drivecycle.energy.battery_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Battery Depth of Discharge modelling.</p>
+<p>Extended description…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traj</strong> (<em>list</em>) – time, velocity, distance list</p></li>
+<li><p><strong>elv</strong> (<em>list</em>) – elevation along teh route</p></li>
+<li><p><strong>num_cells</strong> (<em>int</em>) – number of battery cells</p></li>
+<li><p><strong>capacity</strong> (<em>int</em>) – amp hour capacity of cell</p></li>
+<li><p><strong>k</strong> (<em>float</em>) – peuker coefficient</p></li>
+<li><p><strong>battery_type</strong> (<em>str</em>) – battery chemical type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Time, Velocity, Distance, Power, Current, DoD</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="drivecycle.energy.battery_power">
+<span class="sig-prename descclassname"><span class="pre">drivecycle.energy.</span></span><span class="sig-name descname"><span class="pre">battery_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_te</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_ac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">37</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regen_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_eff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ki</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">con_l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#drivecycle.energy.battery_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Battery power modelling.</p>
+<p>Extended description…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<em>float</em>) – velocity (m/s)</p></li>
+<li><p><strong>p_te</strong> (<em>float</em>) – total power needed for motion (Watts)</p></li>
+<li><p><strong>p_ac</strong> (<em>float</em>) – power needed for accessories (Watts)</p></li>
+<li><p><strong>g_ratio</strong> (<em>float</em>) – gear ratio (G/r)</p></li>
+<li><p><strong>regen_ratio</strong> (<em>float</em>) – regeneration ratio from breaking</p></li>
+<li><p><strong>g_eff</strong> (<em>float</em>) – transmission efficiency</p></li>
+<li><p><strong>ki</strong> (<em>float</em>) – iron losses</p></li>
+<li><p><strong>kw</strong> (<em>float</em>) – windage losses</p></li>
+<li><p><strong>kw</strong> – copper losses</p></li>
+<li><p><strong>con_l</strong> (<em>float</em>) – coefficient</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Power supplied from the batter</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="drivecycle.energy.open_circuit_voltage">
+<span class="sig-prename descclassname"><span class="pre">drivecycle.energy.</span></span><span class="sig-name descname"><span class="pre">open_circuit_voltage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_cells</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'LA'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#drivecycle.energy.open_circuit_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open Circiut Voltage.</p>
+<p>Extended description…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – Depth of Discharge</p></li>
+<li><p><strong>num_cells</strong> (<em>int</em>) – num of battery cells</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – battery chemistry type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>open circuit voltage</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="drivecycle.energy.tractive_force">
+<span class="sig-prename descclassname"><span class="pre">drivecycle.energy.</span></span><span class="sig-name descname"><span class="pre">tractive_force</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">air_density</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.17</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#drivecycle.energy.tractive_force" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tractive force.</p>
+<p>Extended description…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> (<em>float</em>) – velocity (m/s)</p></li>
+<li><p><strong>accel</strong> (<em>float</em>) – acceleration (m/s^2)</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – elevation grade</p></li>
+<li><p><strong>ch</strong> (<em>float</em>) – rolling resistance coefficient</p></li>
+<li><p><strong>m</strong> (<em>float</em>) – mass (kg)</p></li>
+<li><p><strong>air_density</strong> (<em>float</em>) – air density</p></li>
+<li><p><strong>cw</strong> (<em>float</em>) – air density coefficient</p></li>
+<li><p><strong>area</strong> (<em>float</em>) – frontal area of vehicle</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>total tractive force (N)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="drivecycle-graph-module">
-<h2>drivecycle.graph module<a class="headerlink" href="#drivecycle-graph-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-drivecycle.graph">
+<span id="drivecycle-graph-module"></span><h2>drivecycle.graph module<a class="headerlink" href="#module-drivecycle.graph" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="drivecycle.graph.Graph">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">drivecycle.graph.</span></span><span class="sig-name descname"><span class="pre">Graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#drivecycle.graph.Graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Generate route drivecycle.</p>
+<p>Extended description…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>edges</strong> (<em>list</em>) – list of route edges</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="drivecycle.graph.Graph.consolidate_intersections">
+<span class="sig-name descname"><span class="pre">consolidate_intersections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['tertiary',</span> <span class="pre">'secondary',</span> <span class="pre">'bus_stop']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#drivecycle.graph.Graph.consolidate_intersections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Consolidate intersections that are clustered together</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filters</strong> (<em>list</em>) – list intersections to be clustered.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Networkx DiGraph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="drivecycle.graph.Graph.dict_to_graph">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dict_to_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#drivecycle.graph.Graph.dict_to_graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="drivecycle.graph.Graph.get_edges">
+<span class="sig-name descname"><span class="pre">get_edges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#drivecycle.graph.Graph.get_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get list of edges from networkx DiGraph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of dictionaries of route path edges.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="drivecycle.graph.Graph.get_source_target">
+<span class="sig-name descname"><span class="pre">get_source_target</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#drivecycle.graph.Graph.get_source_target" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="drivecycle.graph.Graph.include_stops">
+<span class="sig-name descname"><span class="pre">include_stops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nx.Graph</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#drivecycle.graph.Graph.include_stops" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility function to insert bus stop location in networkx DiGraph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>stops</strong> (<em>list</em>) – List of linear referenced location of bus stops</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Networkx DiGraph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="drivecycle.graph.Graph.simplify_graph">
+<span class="sig-name descname"><span class="pre">simplify_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['tertiary',</span> <span class="pre">'secondary',</span> <span class="pre">'bus_stop']</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nx.Graph</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#drivecycle.graph.Graph.simplify_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility function to simplify graph by merging adjacent edges with the same speed
+:param filters: list of intersections that should NOT be merged
+:type filters: list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Networkx DiGraph</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="drivecycle-plots-module">
-<h2>drivecycle.plots module<a class="headerlink" href="#drivecycle-plots-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-drivecycle.plots">
+<span id="drivecycle-plots-module"></span><h2>drivecycle.plots module<a class="headerlink" href="#module-drivecycle.plots" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="drivecycle.plots.plot">
+<span class="sig-prename descclassname"><span class="pre">drivecycle.plots.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['velocity',</span> <span class="pre">'time']</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#drivecycle.plots.plot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="drivecycle.plots.plot_dt">
+<span class="sig-prename descclassname"><span class="pre">drivecycle.plots.</span></span><span class="sig-name descname"><span class="pre">plot_dt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tvq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#drivecycle.plots.plot_dt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="drivecycle.plots.plot_vd">
+<span class="sig-prename descclassname"><span class="pre">drivecycle.plots.</span></span><span class="sig-name descname"><span class="pre">plot_vd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tvq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#drivecycle.plots.plot_vd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="drivecycle.plots.plot_vt">
+<span class="sig-prename descclassname"><span class="pre">drivecycle.plots.</span></span><span class="sig-name descname"><span class="pre">plot_vt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tvq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#drivecycle.plots.plot_vt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="drivecycle-trajectory-module">
-<h2>drivecycle.trajectory module<a class="headerlink" href="#drivecycle-trajectory-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-drivecycle.trajectory">
+<span id="drivecycle-trajectory-module"></span><h2>drivecycle.trajectory module<a class="headerlink" href="#module-drivecycle.trajectory" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="drivecycle.trajectory.const_accel">
+<span class="sig-prename descclassname"><span class="pre">drivecycle.trajectory.</span></span><span class="sig-name descname"><span class="pre">const_accel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">13.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">di</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ti</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#drivecycle.trajectory.const_accel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate trajectory using constant acceleration model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vi</strong> (<em>float</em>) – initial velocity</p></li>
+<li><p><strong>v_target</strong> (<em>float</em>) – target velocity</p></li>
+<li><p><strong>vf</strong> (<em>float</em>) – final velocity</p></li>
+<li><p><strong>di</strong> (<em>float</em>) – initial position</p></li>
+<li><p><strong>df</strong> (<em>float</em>) – final position</p></li>
+<li><p><strong>ti</strong> (<em>float</em>) – initial time</p></li>
+<li><p><strong>step</strong> (<em>float</em>) – time step</p></li>
+<li><p><strong>a_max</strong> (<em>float</em>) – maximum acceleration</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Time, Velocity, Distance of trajectory</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
@@ -70,11 +323,11 @@
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#drivecycle-drivecycle-module">drivecycle.drivecycle module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#drivecycle-energy-module">drivecycle.energy module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#drivecycle-graph-module">drivecycle.graph module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#drivecycle-plots-module">drivecycle.plots module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#drivecycle-trajectory-module">drivecycle.trajectory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-drivecycle.drivecycle">drivecycle.drivecycle module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-drivecycle.energy">drivecycle.energy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-drivecycle.graph">drivecycle.graph module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-drivecycle.plots">drivecycle.plots module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-drivecycle.trajectory">drivecycle.trajectory module</a></li>
 </ul>
 </li>
 </ul>
