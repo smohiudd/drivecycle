@@ -1,40 +1,26 @@
 # Drive Cycle
 
-*Drive Cycle* is python library that can be used to simulate trajectories (i.e. drive cycles) for public transit buses which can then be used for tasks like energy consumption simluations. 
+Drivecycle is a python package that simulates complex velocity-time profiles for public transit buses while taking into account stop and intersection locations along with speed limits. Drivecycle also simulates battery state of charge given bus (i.e. mass, battery type/capacity, etc.) and route (i.e. elevation change) characteristics.
 
-### Installation
+Read the documentation for more details: https://saadiqm.com/drivecycle
 
-Install the package in editable mode:
-
-```pip install -e ./```
-
-### Import Module
-
-```python
-from drivecycle import drivecycle, trajectory, utils, plots
-```
+## Examples
 
 ### Plot Simple Tragectories
 
-The `Trajectory` class can be used to generate a trajectory given some contraints such as distance, acceleration and start/end/target velocities. This current release only models constant acceleration trajectories however other models may be added in future. 
+The `trajectory` function can be used to generate a trajectory given some contraints such as distance, acceleration and start/end/target velocities.
 
 ```python
+
+from drivecycle import route, trajectory, plots, graph
+
 traj = trajectory.const_accel(vi=5, v_target=12, vf=8, di=0, df=150, step=0.1)
 
 plots.plot_vt(traj, "plot_vt.png")
 ```
-
-##### Velocity - Distance Plot
-
-![VD-Plot](/images/plot_vd.png)
-
 ##### Velocity - Time Plot
 
 ![VT-Plot](/images/plot_vt.png)
-
-##### Distance - Time Plot
-
-![DT-Plot](/images/plot_dt.png)
 
 
 ### Generate Drive Cycle
@@ -46,20 +32,13 @@ Trajectories are grouped together to form drive cycles of a given path. See [sam
 stop={"bus_stop":30,"tertiary":10}
 
 # Generate route drive cycle
-route_drive_cycle = drivecycle.sequential(edges, stops=stop, stop_at_node=True, step=0.1)
+route_drive_cycle = route.sequential(edges, stops=stop, stop_at_node=True, step=0.1)
 ```
-
-#### Velocity - Distance Plot
-
-![VD-Plot](/images/drivecycle_vd.png)
 
 ##### Velocity - Time Plot
 
 ![VT-Plot](/images/drivecycle_vt.png)
 
-##### Distance - Time Plot
-
-![DT-Plot](/images/drivecycle_dt.png)
 
 ### Sample Path Input
 
@@ -114,7 +93,7 @@ Drive Cycle include utils that can used to generate graphs usting `networkx`. Th
 
 stops=[100,367] #linearly referenced stop locations
 
-route_graph = utils.Graph(edges)
+route_graph = graph.Graph(edges)
 
 route_graph.include_stops(stops)
 route_graph.consolidate_intersections(["tertiary", "secondary", "bus_stop"])

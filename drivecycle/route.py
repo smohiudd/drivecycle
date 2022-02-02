@@ -2,6 +2,7 @@ import numpy as np
 from drivecycle import trajectory
 
 from typing import List, Dict, Any
+# import numpy.typing as npt
 
 import logging
 
@@ -16,12 +17,15 @@ def sequential(edges: List[Dict[str, Any]],
                a_max: float = 1,
                step: float = 0.1,
                stop_at_node: bool = False,
-               kmh: bool = True):
+               kmh: bool = True) -> 'np.ndarray':  # type: ignore
     """Generate route drivecycle.
-    
+
+    Generate a drivecycle which is formed from a collection or 
+    sequence of trajectories. 
+
     Args:
-        edges (list): list of route edges
-        stops (dict): dict of stops and stop durations
+        edges (list): list of dictionary of route edges
+        stops (dict): dict of stops categories and stop durations
         di (float): initial position
         vi (float): initial velocity
         ti (float): initial time
@@ -30,7 +34,7 @@ def sequential(edges: List[Dict[str, Any]],
         kmh (bool): kilometers per hour
 
     Returns:
-        list: Time, Velocity, Distance of trajectory
+        list: (n,3) numpy array of time, velocity, distance of drivecycle
 
     """
 
@@ -52,7 +56,7 @@ def sequential(edges: List[Dict[str, Any]],
 
         try:
             v_target_next = edges[i + 1]["speed"] * conversion
-        except IndexError as e:
+        except IndexError:
             v_target_next = 0
 
         v_target = edges[i]["speed"] * conversion
@@ -80,12 +84,12 @@ def sequential(edges: List[Dict[str, Any]],
                                        ti=ti,
                                        step=step,
                                        a_max=a)
-        except AssertionError as e:
-            tf = (df - di) * vi  #Constant veclocity using initial
+        except AssertionError: # if the trajectory is not feasible then use a constant velocity
+            tf = (df - di) * vi  # Constant veclocity using initial
             d = np.array([[ti, vi, di], [tf, vi, df]])
             logging.info(
-                f'Could not complete segment: vi: {vi:.2f} , vf: {vf:.2f}, v_target:{v_target:.2f}, length: {edges[i]["length"]:.2f}'
-            )
+                f'Could not complete segment: vi: {vi:.2f} , vf: {vf:.2f}, \
+                    v_target:{v_target:.2f}, length: {edges[i]["length"]:.2f}')
 
         if stop:
 
@@ -93,7 +97,7 @@ def sequential(edges: List[Dict[str, Any]],
             stop_max_time = stops[stop_id]
             stop_time = np.random.randint(5, stop_max_time)
 
-            t = np.linspace(d[-1][0]+step, d[-1][0] + stop_time, 5)
+            t = np.linspace(d[-1][0] + step, d[-1][0] + stop_time, 5)
             v = np.zeros(5)
             q = np.repeat(d[-1][2], 5)
             s = np.column_stack((t, v, q))
@@ -102,10 +106,9 @@ def sequential(edges: List[Dict[str, Any]],
         di = d[-1][2]
         ti = d[-1][0]
         vi = d[-1][1]
-        
-        tvq = np.concatenate([tvq, d[:-1]])
 
+        tvq = np.concatenate([tvq, d[:-1]])
 
         stop = 0
 
-    return tvq[1:]
+    return tvq[1:]  # type: ignore

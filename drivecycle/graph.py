@@ -3,12 +3,17 @@ from typing import List, Dict, Any, Tuple
 
 
 class Graph:
-    """Generate route drivecycle.
+    """Generate a path graph of a bus route
 
-    Extended description...
+    Generate a path graph of a bus route using a list of dicts of edge
+    attributed such as end node, speed, and linear reference. The purpose
+    of this class is to simplify paths by clustering nearby intersections.
 
-    Args:
-        edges (list): list of route edges
+    Attributes:
+        graph: Networkx graph of route
+        source: First node of the graph
+        target: Last node of the graph
+        edges: List of Dict of edges
 
     """
 
@@ -23,7 +28,7 @@ class Graph:
         return (self.source, self.target)
 
     @staticmethod
-    def dict_to_graph(data_):
+    def dict_to_graph(data_: List[Dict[str, Any]]) -> nx.Graph:
 
         G = nx.path_graph(len(data_) + 1, nx.DiGraph())
         keys = list(data_[0].keys())
@@ -60,10 +65,10 @@ class Graph:
 
         return edges
 
-    def consolidate_intersections(self,
-                                  filters=[
-                                      "tertiary", "secondary", "bus_stop"
-                                  ]):
+    def consolidate_intersections(
+        self,
+        filters: List[str] = ["tertiary", "secondary",
+                              "bus_stop"]) -> nx.Graph:
         """Consolidate intersections that are clustered together
 
         Args:
@@ -133,7 +138,11 @@ class Graph:
         self,
         filters: List[str] = ["tertiary", "secondary", "bus_stop"]
     ) -> 'nx.Graph[Any]':
-        """Utility function to simplify graph by merging adjacent edges with the same speed
+        """Method to simplify graph by clustering adjacent nodes
+
+        This method clusters adjacent nodes that are included in the filters list
+        and that have adjacent edges that have the same speed.
+
         Args:
             filters (list): list of intersections that should NOT be merged
         Returns:
@@ -177,7 +186,7 @@ class Graph:
         return H
 
     def include_stops(self, stops: List[float]) -> 'nx.Graph[Any]':
-        """Utility function to insert bus stop location in networkx DiGraph
+        """Method to insert bus stop location in networkx DiGraph
 
         Args:
             stops (list): List of linear referenced location of bus stops

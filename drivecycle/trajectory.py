@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import numpy.typing as npt
 from typing import Any
 
 
@@ -10,33 +11,44 @@ def const_accel(vi: float = 0.0,
                 df: float = 100.0,
                 ti: float = 0.0,
                 step: float = 0.1,
-                a_max: float = 1.0):
-    """Generate trajectory using constant acceleration model.
+                a_max: float = 1.0) -> npt.NDArray[Any]:
+    """Generate trajectory using constant acceleration.
+
+    Generate linear trajectory with parabolic bends (trapezoidal).
+    The trajectory is divided into three parts: the acceleration phase,
+    constant velocity and deceleration phase. In some cases, the constant
+    velocity phase will not be reached in which case we only have
+    a acceleration and deceleration phase.
 
     Args:
-        vi (float): initial velocity
-        v_target (float): target velocity
-        vf (float): final velocity
-        di (float): initial position
-        df (float): final position
+        vi (float): initial velocity 
+        v_target (float): target velocity 
+        vf (float): final velocity 
+        di (float): initial position 
+        df (float): final position 
         ti (float): initial time
         step (float): time step
         a_max (float): maximum acceleration
-        
     Returns:
-        list: Time, Velocity, Distance of trajectory
+        list: (n,3) numpy array of time, velocity, distance of trajectory
 
     """
 
     tvq = np.array([(ti, vi, di)])
 
-    t = ti+step
+    t = ti + step
+
+    # We need to first check if the trajectory is even possible given
+    # the accel, vi, vf and distance
 
     assert np.abs(pow(vf, 2) - pow(vi, 2)) / 2 < a_max * (
         df - di), "Error 1: Trajectory is not possible given inputs."
     assert np.sqrt(
         (df - di) / a_max
     ) * 2 > 1, "Error 2: Trapezoidal trajectory is not possible given inputs."
+
+    
+    # If the below condition is true, then the target velocity is met 
 
     if (df - di) * a_max > (pow(v_target, 2) -
                             ((pow(vi, 2) + pow(vf, 2)) / 2)):
@@ -58,7 +70,7 @@ def const_accel(vi: float = 0.0,
             elif t >= ti + Ta and t < T - Td:  # Constant velocity phase
                 v = v_target
                 q = _const_q(di, vi, Ta, v_target, ti, t)
-            elif t >= T - Td and t <= T and Td !=0:  # Deceleration phase
+            elif t >= T - Td and t <= T and Td != 0:  # Deceleration phase
                 v = _decel_v(vf, v_target, Td, T, t)
                 q = _decel_q(df, vf, T, t, v_target, Td)
             elif Ta == 0:  # case when Vi and v_target are equal
