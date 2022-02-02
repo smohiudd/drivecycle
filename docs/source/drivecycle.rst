@@ -2,10 +2,10 @@ Reference
 ==================
 
 
-drivecycle.drivecycle module
+drivecycle.route module
 ----------------------------
 
-.. automodule:: drivecycle.drivecycle
+.. automodule:: drivecycle.route
    :members:
 
 drivecycle.energy module
