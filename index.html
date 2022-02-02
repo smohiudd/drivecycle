@@ -34,25 +34,14 @@
             
   <section id="drivecycle-0-1-0-documentation">
 <h1>Drivecycle 0.1.0 Documentation<a class="headerlink" href="#drivecycle-0-1-0-documentation" title="Permalink to this headline">¶</a></h1>
-<p><strong>Drivecycle</strong> is a python package to simulate public transit bus trajectories.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This project is under active development.</p>
-</div>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>To use Drivecycle, first install it using pip:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>pip install
-</pre></div>
-</div>
-</section>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<p>Using Drivecycle</p>
+<p><strong>Drivecycle</strong> is a python package that simulates complex velocity-time profiles for public
+transit buses while taking into account stop and intersection locations along with speed limits.
+Drivecycle also simulates battery state of charge given bus (i.e. mass, battery type/capacity, etc.)
+and route (i.e. elevation change) characteristics.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="drivecycle.html">Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="drivecycle.html#module-drivecycle.drivecycle">drivecycle.drivecycle module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drivecycle.html#drivecycle-route-module">drivecycle.route module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="drivecycle.html#module-drivecycle.energy">drivecycle.energy module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="drivecycle.html#module-drivecycle.graph">drivecycle.graph module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="drivecycle.html#module-drivecycle.plots">drivecycle.plots module</a></li>
@@ -61,6 +50,152 @@
 </li>
 </ul>
 </div>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>To use Drivecycle, first install it using pip:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>pip install drivecycle
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<section id="plot-simple-tragectories">
+<h3>Plot Simple Tragectories<a class="headerlink" href="#plot-simple-tragectories" title="Permalink to this headline">¶</a></h3>
+<p>The trajectory function can be used to generate a trajectory given some contraints such as distance,
+acceleration and start/end/target velocities. This current release only models constant acceleration trajectories however other models may be added in future.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">drivecycle</span> <span class="kn">import</span> <span class="n">route</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">,</span> <span class="n">plots</span>
+
+<span class="n">traj</span> <span class="o">=</span> <span class="n">trajectory</span><span class="o">.</span><span class="n">const_accel</span><span class="p">(</span><span class="n">vi</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">v_target</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">vf</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+
+<span class="n">plots</span><span class="o">.</span><span class="n">plot_vt</span><span class="p">(</span><span class="n">traj</span><span class="p">,</span> <span class="s2">&quot;plot_vt.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/plot_vt.png" src="_images/plot_vt.png" />
+</section>
+<section id="generate-drive-cycle">
+<h3>Generate Drive Cycle<a class="headerlink" href="#generate-drive-cycle" title="Permalink to this headline">¶</a></h3>
+<p>Trajectories are grouped together to form drive cycles of a given path.
+See sample drive cycle input path. The <cite>drivecycle</cite> function may include a <cite>stops</cite> parameter
+that constrains which nodes (i.e. street interseciton or bus stops) the vehicle must stop
+at and for how long.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># What nodes should we stop at and for how long (seconds)</span>
+<span class="n">stop</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;bus_stop&quot;</span><span class="p">:</span><span class="mi">30</span><span class="p">,</span><span class="s2">&quot;tertiary&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">}</span>
+
+<span class="c1"># Generate route drive cycle</span>
+<span class="n">route_drive_cycle</span> <span class="o">=</span> <span class="n">route</span><span class="o">.</span><span class="n">sequential</span><span class="p">(</span>
+   <span class="n">edges</span><span class="p">,</span>
+   <span class="n">stops</span><span class="o">=</span><span class="n">stop</span><span class="p">,</span>
+   <span class="n">stop_at_node</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+   <span class="n">step</span><span class="o">=</span><span class="mf">0.1</span>
+   <span class="p">)</span>
+
+<span class="n">plots</span><span class="o">.</span><span class="n">plot_vt</span><span class="p">(</span><span class="n">route_drive_cycle</span><span class="p">,</span> <span class="s2">&quot;plot_vt.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/drivecycle_vt.png" src="_images/drivecycle_vt.png" />
+</section>
+<section id="sample-path-input">
+<h3>Sample Path Input<a class="headerlink" href="#sample-path-input" title="Permalink to this headline">¶</a></h3>
+<p>A path graph data structure is created using OpenStreetMap (OSM) taxonomy.
+<cite>intersection</cite> denotes the edge that intersects the end node and may be another OSM <cite>way</cite>
+or simply a bus stop. For example <cite>“intersection”:[“primary”]</cite> indicates a primary road
+intersecting the end node.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="p">[</span>
+   <span class="p">{</span>
+      <span class="s2">&quot;way_id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+      <span class="s2">&quot;speed&quot;</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span>
+      <span class="s2">&quot;length&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span>
+      <span class="s2">&quot;intersection&quot;</span><span class="p">:[</span><span class="s2">&quot;primary&quot;</span><span class="p">]</span>
+   <span class="p">},</span>
+   <span class="p">{</span>
+      <span class="s2">&quot;way_id&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
+      <span class="s2">&quot;speed&quot;</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span>
+      <span class="s2">&quot;length&quot;</span><span class="p">:</span><span class="mi">145</span><span class="p">,</span>
+      <span class="s2">&quot;intersection&quot;</span><span class="p">:[</span><span class="s2">&quot;primary&quot;</span><span class="p">]</span>
+   <span class="p">},</span>
+   <span class="p">{</span>
+      <span class="s2">&quot;speed&quot;</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span>
+      <span class="s2">&quot;length&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span>
+      <span class="s2">&quot;intersection&quot;</span><span class="p">:[</span><span class="s2">&quot;bus_stop&quot;</span><span class="p">]</span>
+   <span class="p">},</span>
+   <span class="p">{</span>
+      <span class="s2">&quot;way_id&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span>
+      <span class="s2">&quot;speed&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span>
+      <span class="s2">&quot;length&quot;</span><span class="p">:</span><span class="mi">150</span><span class="p">,</span>
+      <span class="s2">&quot;intersection&quot;</span><span class="p">:[</span><span class="s2">&quot;primary&quot;</span><span class="p">]</span>
+   <span class="p">},</span>
+   <span class="p">{</span>
+      <span class="s2">&quot;way_id&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span>
+      <span class="s2">&quot;speed&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span>
+      <span class="s2">&quot;length&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span>
+      <span class="s2">&quot;intersection&quot;</span><span class="p">:[</span><span class="s2">&quot;tertiary&quot;</span><span class="p">]</span>
+   <span class="p">},</span>
+   <span class="p">{</span>
+      <span class="s2">&quot;way_id&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span>
+      <span class="s2">&quot;speed&quot;</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span>
+      <span class="s2">&quot;length&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span>
+      <span class="s2">&quot;intersection&quot;</span><span class="p">:[</span><span class="s2">&quot;service&quot;</span><span class="p">,</span><span class="s2">&quot;service&quot;</span><span class="p">]</span>
+   <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-path-graph">
+<h3>Generate Path Graph<a class="headerlink" href="#generate-path-graph" title="Permalink to this headline">¶</a></h3>
+<p>Drive Cycle include utils that can used to generate graphs usting <cite>networkx</cite>.
+These are helpful to simplify path graphs to reduce redundant nodes and edges that may cause
+trajectories to fail. It can also be used to embed stops in a given path graph.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stops</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">367</span><span class="p">]</span> <span class="c1">#linearly referenced stop locations</span>
+
+<span class="n">route_graph</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+
+<span class="n">route_graph</span><span class="o">.</span><span class="n">include_stops</span><span class="p">(</span><span class="n">stops</span><span class="p">)</span>
+<span class="n">route_graph</span><span class="o">.</span><span class="n">consolidate_intersections</span><span class="p">(</span>
+   <span class="p">[</span><span class="s2">&quot;tertiary&quot;</span><span class="p">,</span> <span class="s2">&quot;secondary&quot;</span><span class="p">,</span> <span class="s2">&quot;bus_stop&quot;</span><span class="p">]</span>
+   <span class="p">)</span>
+<span class="n">route_graph</span><span class="o">.</span><span class="n">simplify_graph</span><span class="p">(</span>
+   <span class="p">[</span><span class="s2">&quot;tertiary&quot;</span><span class="p">,</span> <span class="s2">&quot;secondary&quot;</span><span class="p">,</span> <span class="s2">&quot;bus_stop&quot;</span><span class="p">]</span>
+   <span class="p">)</span>
+
+<span class="n">route_graph</span><span class="o">.</span><span class="n">get_edges</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-drivecycle-using-valhalla-trace-attributes">
+<h3>Generate Drivecycle using Valhalla Trace Attributes<a class="headerlink" href="#generate-drivecycle-using-valhalla-trace-attributes" title="Permalink to this headline">¶</a></h3>
+<p>Valhalla’s map matching API can be used to match a bus route geometry to OSM way ids.
+This can help us determine both road speeds and intersection locations along a route.
+Using the map matching Trace Attributes action, we can get a list of OSM edges the bus route
+travels along:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;end_node&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;street_intersection&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;elapsed_time&#39;</span><span class="p">:</span> <span class="mf">0.698</span><span class="p">,</span>
+   <span class="s1">&#39;intersecting_edges&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;road_class&#39;</span><span class="p">:</span> <span class="s1">&#39;service_other&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;begin_heading&#39;</span><span class="p">:</span> <span class="mi">204</span><span class="p">,</span>
+   <span class="s1">&#39;to_edge_name_consistency&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+   <span class="s1">&#39;from_edge_name_consistency&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}]},</span>
+<span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="mf">0.007</span><span class="p">,</span>
+<span class="s1">&#39;names&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;48 Avenue NW&#39;</span><span class="p">],</span>
+<span class="s1">&#39;speed&#39;</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span>
+<span class="s1">&#39;way_id&#39;</span><span class="p">:</span> <span class="mi">463682703</span><span class="p">},</span>
+<span class="p">{</span><span class="s1">&#39;end_node&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;street_intersection&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;elapsed_time&#39;</span><span class="p">:</span> <span class="mf">7.607</span><span class="p">,</span>
+   <span class="s1">&#39;intersecting_edges&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;road_class&#39;</span><span class="p">:</span> <span class="s1">&#39;residential&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;begin_heading&#39;</span><span class="p">:</span> <span class="mi">131</span><span class="p">,</span>
+   <span class="s1">&#39;to_edge_name_consistency&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+   <span class="s1">&#39;from_edge_name_consistency&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}]},</span>
+<span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="mf">0.067</span><span class="p">,</span>
+<span class="s1">&#39;names&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;48 Avenue NW&#39;</span><span class="p">],</span>
+<span class="s1">&#39;speed&#39;</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span>
+<span class="s1">&#39;way_id&#39;</span><span class="p">:</span> <span class="mi">463682703</span><span class="p">}</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+</pre></div>
+</div>
+<p>Using the drivecycle apis listed above we can then generate a simulation drivecycle of
+the entire route:</p>
+<img alt="_images/route_drivecycle.png" src="_images/route_drivecycle.png" />
+</section>
 </section>
 </section>
 

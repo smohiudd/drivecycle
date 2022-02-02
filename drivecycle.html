@@ -34,34 +34,8 @@
             
   <section id="reference">
 <h1>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h1>
-<section id="module-drivecycle.drivecycle">
-<span id="drivecycle-drivecycle-module"></span><h2>drivecycle.drivecycle module<a class="headerlink" href="#module-drivecycle.drivecycle" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="drivecycle.drivecycle.sequential">
-<span class="sig-prename descclassname"><span class="pre">drivecycle.drivecycle.</span></span><span class="sig-name descname"><span class="pre">sequential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">di</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ti</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_at_node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kmh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#drivecycle.drivecycle.sequential" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate route drivecycle.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>edges</strong> (<em>list</em>) – list of route edges</p></li>
-<li><p><strong>stops</strong> (<em>dict</em>) – dict of stops and stop durations</p></li>
-<li><p><strong>di</strong> (<em>float</em>) – initial position</p></li>
-<li><p><strong>vi</strong> (<em>float</em>) – initial velocity</p></li>
-<li><p><strong>ti</strong> (<em>float</em>) – initial time</p></li>
-<li><p><strong>a_max</strong> (<em>float</em>) – maximum acceleration</p></li>
-<li><p><strong>step</strong> (<em>float</em>) – time step</p></li>
-<li><p><strong>kmh</strong> (<em>bool</em>) – kilometers per hour</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Time, Velocity, Distance of trajectory</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="drivecycle-route-module">
+<h2>drivecycle.route module<a class="headerlink" href="#drivecycle-route-module" title="Permalink to this headline">¶</a></h2>
 </section>
 <section id="module-drivecycle.energy">
 <span id="drivecycle-energy-module"></span><h2>drivecycle.energy module<a class="headerlink" href="#module-drivecycle.energy" title="Permalink to this headline">¶</a></h2>
@@ -323,7 +297,7 @@
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-drivecycle.drivecycle">drivecycle.drivecycle module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#drivecycle-route-module">drivecycle.route module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-drivecycle.energy">drivecycle.energy module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-drivecycle.graph">drivecycle.graph module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-drivecycle.plots">drivecycle.plots module</a></li>
