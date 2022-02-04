@@ -1,6 +1,7 @@
-Reference
+API Reference
 ==================
 
+User API reference for the Drivecycle package covering usage of all public modules and functions.
 
 drivecycle.route module
 ----------------------------

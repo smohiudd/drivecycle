@@ -11,13 +11,6 @@ transit buses while taking into account stop and intersection locations along wi
 Drivecycle also simulates battery state of charge given bus (i.e. mass, battery type/capacity, etc.) 
 and route (i.e. elevation change) characteristics.
 
-.. toctree::
-   :maxdepth: 4
-
-   drivecycle
-
-
-
 Installation
 ------------
 
@@ -186,5 +179,10 @@ the entire route:
 .. image:: ../../images/route_drivecycle.png
 
 
+.. toctree::
+   :maxdepth: 1
 
+   drivecycle
+   valhalla
+   battery
 
