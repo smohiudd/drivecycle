@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Battery Model &#8212; Drivecycle 0.1.0 documentation</title>
+    <title>1 Battery Model &#8212; Drivecycle 0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="_static/./css/custom.css" />
@@ -14,9 +14,10 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Valhalla Trace Attributes" href="valhalla.html" />
+    <link rel="prev" title="Valhalla Map Matching" href="valhalla.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -34,8 +35,76 @@
           <div class="body" role="main">
             
   <section id="battery-model">
-<h1>Battery Model<a class="headerlink" href="#battery-model" title="Permalink to this headline">¶</a></h1>
-<p>lksjdflksjdflskjdflk</p>
+<h1><span class="sectnum">1</span> Battery Model<a class="headerlink" href="#battery-model" title="Permalink to this headline">¶</a></h1>
+<p>The battery module is used to simulate battery power requirements and battery
+state of charger for a battery electric bus. It is determined using the following
+steps.</p>
+<section id="total-tractive-force">
+<h2><span class="sectnum">1.1</span> Total Tractive Force<a class="headerlink" href="#total-tractive-force" title="Permalink to this headline">¶</a></h2>
+<section id="rolling-resistance-force">
+<h3><span class="sectnum">1.1.1</span> Rolling Resistance Force<a class="headerlink" href="#rolling-resistance-force" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[F_r = \mu m g\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mu\)</span>, is the coefficient of rolling resisance</p></li>
+<li><p><span class="math notranslate nohighlight">\(m\)</span>, mass of the vehicle in <span class="math notranslate nohighlight">\(kg\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(g\)</span>, is the gravitational acceleration constant</p></li>
+</ul>
+</section>
+<section id="aerodynamic-drag-force">
+<h3><span class="sectnum">1.1.2</span> Aerodynamic Drag Force<a class="headerlink" href="#aerodynamic-drag-force" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[F_{ad} = \frac{1}{2}\ \rho A C_d v^2\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\rho\)</span>, density of air</p></li>
+<li><p><span class="math notranslate nohighlight">\(A\)</span>, frontal area in <span class="math notranslate nohighlight">\(m^2\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(C_d\)</span>, drag coefficient</p></li>
+<li><p><span class="math notranslate nohighlight">\(v\)</span>, velocity in <span class="math notranslate nohighlight">\(m/s\)</span></p></li>
+</ul>
+</section>
+<section id="hill-climbing-force">
+<h3><span class="sectnum">1.1.3</span> Hill Climbing Force<a class="headerlink" href="#hill-climbing-force" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[F_h = m g sin(\alpha)\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\alpha\)</span>, grade of the slope</p></li>
+</ul>
+</section>
+<section id="acceleration-force">
+<h3><span class="sectnum">1.1.4</span> Acceleration Force<a class="headerlink" href="#acceleration-force" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[F_a = m a\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(a\)</span>, acceleration of the vehicle in <span class="math notranslate nohighlight">\(m/s^2\)</span></p></li>
+</ul>
+</section>
+<section id="id1">
+<h3><span class="sectnum">1.1.5</span> Total Tractive Force<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate nohighlight">
+\[F_t = F_r + F_{ad} + F_h + F_a\]</div>
+</section>
+</section>
+<section id="energy-to-move-the-vehicle">
+<h2><span class="sectnum">1.2</span> Energy to move the Vehicle<a class="headerlink" href="#energy-to-move-the-vehicle" title="Permalink to this headline">¶</a></h2>
+<div class="math notranslate nohighlight">
+\[P_t = F_t v\]</div>
+</section>
+<section id="energy-flow">
+<h2><span class="sectnum">1.3</span> Energy Flow<a class="headerlink" href="#energy-flow" title="Permalink to this headline">¶</a></h2>
+<figure class="align-default" id="id2">
+<img alt="_images/energy_flow.png" src="_images/energy_flow.png" />
+<figcaption>
+<p><span class="caption-text">Electric Vehicle Technology Explained Second Edition</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="references">
+<h2><span class="sectnum">1.4</span> References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Electric Vehicle Technology Explained Second Edition</p></li>
+<li><p>A Study on the Open Circuit Voltage and State of Charge Characterization of High Capacity Lithium-Ion Battery Under Different Temperature</p></li>
+</ol>
+</section>
 </section>
 
 
@@ -57,15 +126,15 @@
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="drivecycle.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="valhalla.html">Valhalla Trace Attributes</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Battery Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="valhalla.html">Valhalla Map Matching</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><span class="sectnum">1</span> Battery Model</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="valhalla.html" title="previous chapter">Valhalla Trace Attributes</a></li>
+      <li>Previous: <a href="valhalla.html" title="previous chapter">Valhalla Map Matching</a></li>
   </ul></li>
 </ul>
 </div>
@@ -95,7 +164,7 @@
       &copy;2022, Saadiq Mohiuddin.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Valhalla Trace Attributes &#8212; Drivecycle 0.1.0 documentation</title>
+    <title>Valhalla Map Matching &#8212; Drivecycle 0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="_static/./css/custom.css" />
@@ -16,7 +16,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Battery Model" href="battery.html" />
+    <link rel="next" title="1 Battery Model" href="battery.html" />
     <link rel="prev" title="API Reference" href="drivecycle.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -34,12 +34,75 @@
 
           <div class="body" role="main">
             
-  <section id="valhalla-trace-attributes">
-<h1>Valhalla Trace Attributes<a class="headerlink" href="#valhalla-trace-attributes" title="Permalink to this headline">¶</a></h1>
-<p>lksjdflksjdflskjdflk</p>
-<section id="title">
-<h2>title<a class="headerlink" href="#title" title="Permalink to this headline">¶</a></h2>
-</section>
+  <section id="valhalla-map-matching">
+<h1>Valhalla Map Matching<a class="headerlink" href="#valhalla-map-matching" title="Permalink to this headline">¶</a></h1>
+<p>To generate complete drive cycles for bus routes we can utilize the open routing engine <a class="reference external" href="https://valhalla.readthedocs.io/en/latest/">Valhalla</a> to
+match route shapes to OSM ways. Valhalla has a <a class="reference external" href="https://valhalla.readthedocs.io/en/latest/api/map-matching/api-reference/">map matching API</a> and we use the trace attributes call
+to get detailed information (attributes) along the route. The repsonse is a path graph which includes
+sectoins of way_ids along with details such as speed, road class and node intersecting edge road class.</p>
+<p>This information is critical to develop drivecycle profile along the route taking into account speed
+and stop locations.</p>
+<p>An example POST request to the API may look somehting like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;encoded_polyline&quot;</span><span class="p">:</span><span class="s2">&quot;gfqb`BvlijxE...&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;costing&quot;</span><span class="p">:</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;filters&quot;</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;attributes&quot;</span><span class="p">:[</span>
+                <span class="s2">&quot;edge.way_id&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;edge.names&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;edge.length&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;edge.speed&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;node.intersecting_edge.road_class&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;node.intersecting_edge.begin_heading&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;node.elapsed_time&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;node.type&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;action&quot;</span><span class="p">:</span><span class="s2">&quot;include&quot;</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The resulting reponse would return detailed infomatoin about the route:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;end_node&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;street_intersection&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;elapsed_time&#39;</span><span class="p">:</span> <span class="mf">0.698</span><span class="p">,</span>
+   <span class="s1">&#39;intersecting_edges&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;road_class&#39;</span><span class="p">:</span> <span class="s1">&#39;service_other&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;begin_heading&#39;</span><span class="p">:</span> <span class="mi">204</span><span class="p">,</span>
+   <span class="s1">&#39;to_edge_name_consistency&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+   <span class="s1">&#39;from_edge_name_consistency&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}]},</span>
+<span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="mf">0.007</span><span class="p">,</span>
+<span class="s1">&#39;names&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;48 Avenue NW&#39;</span><span class="p">],</span>
+<span class="s1">&#39;speed&#39;</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span>
+<span class="s1">&#39;way_id&#39;</span><span class="p">:</span> <span class="mi">463682703</span><span class="p">},</span>
+<span class="p">{</span><span class="s1">&#39;end_node&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;street_intersection&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;elapsed_time&#39;</span><span class="p">:</span> <span class="mf">7.607</span><span class="p">,</span>
+   <span class="s1">&#39;intersecting_edges&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;road_class&#39;</span><span class="p">:</span> <span class="s1">&#39;residential&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;begin_heading&#39;</span><span class="p">:</span> <span class="mi">131</span><span class="p">,</span>
+   <span class="s1">&#39;to_edge_name_consistency&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+   <span class="s1">&#39;from_edge_name_consistency&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}]},</span>
+<span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="mf">0.067</span><span class="p">,</span>
+<span class="s1">&#39;names&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;48 Avenue NW&#39;</span><span class="p">],</span>
+<span class="s1">&#39;speed&#39;</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span>
+<span class="s1">&#39;way_id&#39;</span><span class="p">:</span> <span class="mi">463682703</span><span class="p">}</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+</pre></div>
+</div>
+<p>Unforunately, the resulting path graph has a high proportion of short edges which do not work well
+with the trajectory algorithm so we must consolidate nodes to simplify the graph:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">data_</span><span class="p">)</span>
+
+<span class="c1"># Cluster intersections in the filter list that</span>
+<span class="c1"># are close together</span>
+<span class="n">a</span><span class="o">.</span><span class="n">consolidate_intersections</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;tertiary&quot;</span><span class="p">,</span> <span class="s2">&quot;secondary&quot;</span><span class="p">])</span>
+
+<span class="c1"># Merge adjacent edges that have the same speed but do not merge</span>
+<span class="c1"># intersections in the filter list. We want to maintain these</span>
+<span class="c1"># intersections as stop locations.</span>
+<span class="n">a</span><span class="o">.</span><span class="n">simplify_graph</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;tertiary&quot;</span><span class="p">,</span> <span class="s2">&quot;secondary&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Running the simplification step should drastically reduce the number of edges in the path graph.</p>
 </section>
 
 
@@ -61,8 +124,8 @@
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="drivecycle.html">API Reference</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Valhalla Trace Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="battery.html">Battery Model</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Valhalla Map Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="battery.html"><span class="sectnum">1</span> Battery Model</a></li>
 </ul>
 
 <div class="relations">
@@ -70,7 +133,7 @@
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="drivecycle.html" title="previous chapter">API Reference</a></li>
-      <li>Next: <a href="battery.html" title="next chapter">Battery Model</a></li>
+      <li>Next: <a href="battery.html" title="next chapter"><span class="sectnum">1</span> Battery Model</a></li>
   </ul></li>
 </ul>
 </div>
@@ -100,7 +163,7 @@
       &copy;2022, Saadiq Mohiuddin.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

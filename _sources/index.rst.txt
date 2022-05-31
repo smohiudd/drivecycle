@@ -124,14 +124,19 @@ trajectories to fail. It can also be used to embed stops in a given path graph.
 
 .. code-block:: python
 
-   stops=[100,367] #linearly referenced stop locations
+   stops=[100,367] # linearly referenced stop locations along the route
 
-   route_graph = graph.Graph(edges)
+   route_graph = graph.Graph(edges) # create instance of Graph class
 
-   route_graph.include_stops(stops)
-   route_graph.consolidate_intersections(
+   route_graph.include_stops(stops) # insert stop into the path graph
+
+   # Cluster stop locations in the filter list that are close together
+   route_graph.consolidate_intersections( 
       ["tertiary", "secondary", "bus_stop"]
       )
+
+   # Merge adjacent edges that have the same speed but do not merge
+   # stop locations in the filter list.
    route_graph.simplify_graph(
       ["tertiary", "secondary", "bus_stop"]
       )
@@ -177,6 +182,25 @@ Using the drivecycle apis listed above we can then generate a simulation drivecy
 the entire route:
 
 .. image:: ../../images/route_drivecycle.png
+
+
+Electric Bus Battery Depth of Discharge
+#######################################
+
+Using the drive we generated of the route, we can model the the battery depth of discharge
+of a battery electric bus using characteristics of the bus and batteries cells.
+
+.. code-block:: python
+
+   power = energy.battery_model(
+      dc, # drivecycle
+      m=15000, # mass in kg
+      regen_ratio=0.5, # regeneration ratio
+      num_cells=350, # number of battery cells
+      capacity=75, # Amp hour capacity
+      battery_type="LI-ION", # battery chemistry
+   )
+
 
 
 .. toctree::
