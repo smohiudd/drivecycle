@@ -19,7 +19,7 @@ def battery_model(traj: List[float],
 
     Args:
         traj (list): time, velocity, distance list
-        elv (list): elevation along teh route
+        elv (list): elevation along the route
         num_cells (int): number of battery cells
         capacity (int): amp hour capacity of cell, 1C
         k (float): peuker coefficient
