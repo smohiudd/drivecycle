@@ -111,7 +111,10 @@ def const_accel(vi: float = 0.0,
             tvq = np.concatenate([tvq, s])
             t += step
 
-    return tvq
+    return tvq 
+    
+    # TODO: need a different data structure for the time, velocit, data return. 
+    # Maybe a dictionary
 
 
 def _accel_q(di: float, vi: float, ti: float, v_target: float, Ta: float,

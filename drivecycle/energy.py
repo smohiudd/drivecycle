@@ -21,7 +21,7 @@ def battery_model(traj: List[float],
         traj (list): time, velocity, distance list
         elv (list): elevation along teh route
         num_cells (int): number of battery cells
-        capacity (int): amp hour capacity of cell
+        capacity (int): amp hour capacity of cell, 1C
         k (float): peuker coefficient
         battery_type (str): battery chemical type
 
@@ -32,7 +32,8 @@ def battery_model(traj: List[float],
 
     data = np.c_[traj, np.zeros((len(traj), 3))]  # Power, Cr, DoD
     r_in = (0.022 / capacity) * num_cells  # Internal resistance
-    peu_cap = (np.power((capacity / 10), k)) * 10
+    # peu_cap = (np.power((capacity / 10), k)) * 10
+    peu_cap = capacity
     alpha = None
 
     if elv is not None:
