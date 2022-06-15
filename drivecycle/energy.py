@@ -6,16 +6,94 @@ from typing import List, Any, Optional
 import numpy.typing as npt
 
 
+def energy_model(traj: List[float],
+                  elv: Optional[List[List[float]]] = None,
+                  capacity: int = 300, #kWh
+                  power_aux:float = 0.0, #auxiliary loads kWh
+                  **kwargs: str) -> npt.NDArray[Any]:
+    """Battery State of Charge (SoC) modelling.
+
+    Args:
+        traj (list): time, velocity, distance list
+        elv (list): elevation along the route
+        capacity (int): batter capacity (kWh)
+        power_aux (float): auxiliary load on the vehicle (kWh)
+
+    Returns:
+        list: (n,5) numpy array of time, velocity, distance, power, SoC
+    """
+
+    data = np.c_[traj, np.zeros((len(traj), 2))]  # Power, SoC
+    data[0,4]=1
+    alpha = None
+
+    if elv is not None:
+        x = [i[0] for i in elv]
+        y = [i[1] for i in elv]
+        elv_f = interpolate.interp1d(x, y)
+
+    for i, (prev, curr) in enumerate(utils.pairwise(traj)):
+
+        t0, v0, d0 = prev
+        t1, v1, d1 = curr
+
+        accel = (v1 - v0) / (t1 - t0)
+
+        if v1 == 0:
+            data[i + 1, 3:5] = data[i, 3:5]
+        else:
+            if elv is not None:
+                alpha = (elv_f(d1) - elv_f(d0)) / (d1 - d0)
+
+            # determine tractive force
+            trac_force_kwargs = list(
+                inspect.signature(tractive_force).parameters)
+            force = tractive_force(
+                v1,
+                accel,
+                alpha=alpha,
+                **{
+                    i: kwargs[i]  # type: ignore
+                    for i in kwargs if i in trac_force_kwargs
+                },
+            )
+
+            # power supplied to or from the battery
+            batt_power_kwargs = list(
+                inspect.signature(battery_power).parameters)
+            power_batt = battery_power(
+                v1, 
+                force, 
+                **{
+                    i: kwargs[i]  # type: ignore
+                    for i in kwargs if i in batt_power_kwargs
+                },
+            )
+
+            # Include accessory/auxiliary power
+            power = (power_batt + power_aux)/1000 # Total power in kW
+
+            Einst = power * ((t1-t0)/3600) # Instantaneous energy in kWh
+
+            #print(f"Power: {power}, Einst: {Einst}, SOC: {Einst/capacity}")
+            
+            data[i + 1, 3] = power
+            data[i + 1, 4] = data[i,4] - (Einst/capacity)
+
+    return data
+
 def battery_model(traj: List[float],
                   elv: Optional[List[List[float]]] = None,
-                  num_cells: int = 200,
-                  capacity: int = 50,
-                  k: float = 1.045,
+                  num_cells: int = 2000,
+                  capacity: int = 75,
+                  k: float = 1.0,
                   battery_type: str = "LI-ION",
+                  power_aux: float = 0.0,
                   **kwargs: str) -> npt.NDArray[Any]:
-    """Battery Depth of Discharge modelling.
+    """Battery Depth of Discharge (DoD) modelling.
 
-    Model battery depth of discharge 
+    Battery depth of discharge modelling using calculation for 
+    current draw from the battery.
 
     Args:
         traj (list): time, velocity, distance list
@@ -32,8 +110,7 @@ def battery_model(traj: List[float],
 
     data = np.c_[traj, np.zeros((len(traj), 3))]  # Power, Cr, DoD
     r_in = (0.022 / capacity) * num_cells  # Internal resistance
-    # peu_cap = (np.power((capacity / 10), k)) * 10
-    peu_cap = capacity
+    peu_cap = (np.power((capacity / 1), k)) * 1
     alpha = None
 
     if elv is not None:
@@ -67,57 +144,60 @@ def battery_model(traj: List[float],
                 },
             )
 
-            p_te = (force * v1)  # Watts
-            data[i + 1, 3] = p_te
-
             batt_power_kwargs = list(
                 inspect.signature(battery_power).parameters)
-            p_batt = battery_power(
+            power_batt = battery_power(
                 v1,
-                p_te,
+                force,
                 **{
                     i: kwargs[i]  # type: ignore
                     for i in kwargs if i in batt_power_kwargs
                 })
-            # p_batt = battery_power(v1, p_te, **batt_power)
 
+            data[i + 1, 3] = power_batt+power_aux
+
+            # determine open circuit voltage given battery type and number of cells
             voltage = open_circuit_voltage(data[i, 5],
-                                           num_cells,
-                                           type=battery_type)
-
-            if p_batt > 0:
-                a = np.power(voltage, 2) - (4 * r_in * p_batt)
+                                           type=battery_type) * num_cells
+                                           
+            if power_batt > 0:
+                a = np.power(voltage, 2) - (4 * r_in * power_batt)
                 assert a > 0, "Cannot determine current, insufficient total voltage."
 
+                # Current drawn from the battery
                 batt_current = (voltage - np.sqrt(a)) / (2 * r_in)
                 data[i + 1,
-                     4] = data[i, 4] + (np.power(batt_current, k) / 3600)
-            elif p_batt == 0:
+                     4] = data[i, 4] + ((batt_current*(t1-t0)) / 3600)
+            elif power_batt == 0:
                 batt_current = 0
-            elif p_batt < 0:
+            elif power_batt < 0:
                 # Regenerative braking double the internal resistance.
-                a = np.power(voltage, 2) - (4 * 2 * r_in * -p_batt)
+                a = np.power(voltage, 2) + (4 * 1.0 * r_in * -power_batt)
                 assert a > 0, "Cannot determine current, insufficient total voltage."
 
-                batt_current = (-voltage + np.sqrt(a)) / (2 * 2 * r_in)
-                data[i + 1, 4] = data[i, 4] - (batt_current / 3600)
+                # Current drawn from the battery
+                batt_current = (-voltage + np.sqrt(a)) / (2 * 1.0 * r_in)
+                data[i + 1, 4] = data[i, 4] - ((batt_current*(t1-t0)) / 3600)
 
-            data[i + 1, 5] = data[i + 1, 4] / peu_cap
+            # assuming battery cells are in series therefor capacity is same as input
+            data[i + 1, 5] = data[i + 1, 4] / peu_cap 
 
     return data  # type: ignore
 
 
 def battery_power(
     v: float,
-    p_te: float,
-    p_ac: float = 0.0,
-    g_ratio: float = 37.0,  # gear ratio G/r,
-    regen_ratio: float = 0.5,
-    g_eff: float = 0.95,  # transmission efficiency
-    ki: float = 0.01,  # iron losses
-    kw: float = 0.000005,  # windage losses
-    kc: float = 0.3,  # copper losses
-    con_l: int = 600,
+    force: float, # tractive force in N
+    gear_ratio: float = 4.66,
+    radius_wheel: float = 0.5, # wheel radius in m
+    regen_ratio: float = 0.5, # proportion of braking forcing to use for regen
+    trans_eff: float = 0.95,  # transmission efficiency
+    motor_eff: float = 0.90, # motor efficiency
+    pow_conv_eff: float = 0.95, # power converter efficiency
+    # ki: float = 0.01,  # iron losses
+    # kw: float = 0.000005,  # windage losses
+    # kc: float = 0.3,  # copper losses
+    # con_l: int = 600,
 ) -> float:
     """Battery power modelling.
 
@@ -125,57 +205,62 @@ def battery_power(
 
     Args:
         v (float): velocity (m/s)
-        p_te (float): total power needed for motion (Watts)
-        p_ac (float): power needed for accessories (Watts)
-        g_ratio (float): gear ratio (G/r)
-        regen_ratio (float): regeneration ratio from breaking
-        g_eff (float): transmission efficiency
-        ki (float): iron losses
-        kw (float): windage losses
-        kw (float): copper losses
-        con_l (float): coefficient
-
+        force (float): tractive force (N)
+        gear_ratio (float): gear ratio
+        radius_wheel (float): dynamic radius of tires (m)
+        regen_ratio (float): proportion of braking forcing to use for regen
+        trans_eff (float): transmission efficiency
+        motor_eff (float): motor efficiency
+        pow_conv_eff (float): power converter efficiency
     Returns:
-        float: Power supplied from the batter
+        float: Power supplied from the battery (excluding accessor power)
 
     """
+    
+    if force<0:
+        force = force*regen_ratio
 
-    omega = g_ratio * v
+    torque_wheel = force * radius_wheel #torque at the wheel
 
-    if omega == 0:
-        p_te = 0.0
-        pmot_in = 0.0
-        torque = 0.0
-        eff_mot = 0.5
-    elif omega > 0:
-        if p_te < 0:
-            p_te = regen_ratio * p_te
+    torque_motor = torque_wheel/(gear_ratio* trans_eff) # torque at the motor
 
-        if p_te >= 0:
-            pmot_out = p_te / g_eff
-        elif p_te < 0:
-            pmot_out = p_te * g_eff
+    omega_wheel = v/radius_wheel #angular velocity of the wheel
+    omega_motor = omega_wheel * gear_ratio #angular velocity of motor
 
-        torque = pmot_out / omega
+    power = (torque_motor * omega_motor)/(motor_eff*pow_conv_eff) #Power in Watts
 
-        if torque > 0:
-            eff_mot = (torque * omega) / ((torque * omega) +
-                                          (np.power(torque, 2) * kc) +
-                                          (omega * ki) +
-                                          ((np.power(omega, 3) * kw) + con_l))
-        elif torque < 0:
-            eff_mot = (-torque * omega) / ((-torque * omega) +
-                                           (np.power(torque, 2) * kc) +
-                                           (omega * ki) +
-                                           ((np.power(omega, 3) * kw) + con_l))
+    return power
 
-        if pmot_out >= 0:
-            pmot_in = pmot_out / eff_mot
-        elif pmot_out < 0:
-            pmot_in = pmot_out * eff_mot
+    # TODO include formula for motor efficiency
 
-    return pmot_in + p_ac
+    # if v==0:
+    #     pmot_in=0
+    # elif v>0:
+    #     if force<0:
+    #         force = regen_ratio * force * g_eff
+    #     elif force >=0:
+    #         force = force / g_eff
 
+    #     torque = (force * rw)/gr
+    #     omega = (gr * v)/rw
+
+        # if torque > 0:
+        #     eff_mot = (torque * omega) / ((torque * omega) +
+        #                                   (np.power(torque, 2) * kc) +
+        #                                   (omega * ki) +
+        #                                   ((np.power(omega, 3) * kw) + con_l))
+        # elif torque < 0:
+        #     eff_mot = (-torque * omega) / ((-torque * omega) +
+        #                                    (np.power(torque, 2) * kc) +
+        #                                    (omega * ki) +
+        #                                    ((np.power(omega, 3) * kw) + con_l))
+
+        # if force >= 0:
+        #     pmot_in = (force *v) / 0.85
+        # elif force < 0:
+        #     pmot_in =(force *v) * 0.85
+
+    # return pmot_in
 
 def tractive_force(
     v: float,
@@ -225,14 +310,13 @@ def tractive_force(
     return roll_resist_force + aero_drag_force + hill_climb_force + accel_force
 
 
-def open_circuit_voltage(x: float, num_cells: int, type: str = "LA") -> float:
+def open_circuit_voltage(x: float, type: str = "LA") -> float:
     """Open Circiut Voltage.
 
     Extended description...
 
     Args:
         x (float): Depth of Discharge
-        num_cells (int): num of battery cells
         type (str): battery chemistry type
 
     Returns:
@@ -240,12 +324,14 @@ def open_circuit_voltage(x: float, num_cells: int, type: str = "LA") -> float:
 
     """
 
-    voltage = 0.0
+    # TODO: Remove LA and NC battey type since not common anymore
 
+    voltage = 0.0
+    
     if type == "LA":
-        voltage = (2.15 - ((2.15 - 2.00) * x)) * num_cells
+        voltage = (2.15 - ((2.15 - 2.00) * x))
     elif type == "NC":
-        voltage = num_cells * (-8.2816 * (np.power(x, 7)) + 23.5749 *
+        voltage = (-8.2816 * (np.power(x, 7)) + 23.5749 *
                                (np.power(x, 6)) - 30 *
                                (np.power(x, 5)) + 23.7053 *
                                (np.power(x, 4)) - 12.5877 * (np.power(x, 3)) +
@@ -256,4 +342,4 @@ def open_circuit_voltage(x: float, num_cells: int, type: str = "LA") -> float:
             s, 4) + 6.15 * np.power(s, 3) - 3.64 * np.power(
                 s, 2) + 1.26 * np.power(s, 1) + 3.24
 
-    return voltage * num_cells
+    return voltage
