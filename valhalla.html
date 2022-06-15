@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Valhalla Map Matching &#8212; Drivecycle 0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,7 +36,7 @@
           <div class="body" role="main">
             
   <section id="valhalla-map-matching">
-<h1>Valhalla Map Matching<a class="headerlink" href="#valhalla-map-matching" title="Permalink to this headline">¶</a></h1>
+<h1>Valhalla Map Matching<a class="headerlink" href="#valhalla-map-matching" title="Permalink to this heading">¶</a></h1>
 <p>To generate complete drive cycles for bus routes we can utilize the open routing engine <a class="reference external" href="https://valhalla.readthedocs.io/en/latest/">Valhalla</a> to
 match route shapes to OSM ways. Valhalla has a <a class="reference external" href="https://valhalla.readthedocs.io/en/latest/api/map-matching/api-reference/">map matching API</a> and we use the trace attributes call
 to get detailed information (attributes) along the route. The repsonse is a path graph which includes
@@ -125,7 +126,7 @@ with the trajectory algorithm so we must consolidate nodes to simplify the graph
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="drivecycle.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Valhalla Map Matching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="battery.html"><span class="sectnum">1</span> Battery Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="battery.html"><span class="sectnum">1 </span>Battery Model</a></li>
 </ul>
 
 <div class="relations">
@@ -133,7 +134,7 @@ with the trajectory algorithm so we must consolidate nodes to simplify the graph
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="drivecycle.html" title="previous chapter">API Reference</a></li>
-      <li>Next: <a href="battery.html" title="next chapter"><span class="sectnum">1</span> Battery Model</a></li>
+      <li>Next: <a href="battery.html" title="next chapter"><span class="sectnum">1 </span>Battery Model</a></li>
   </ul></li>
 </ul>
 </div>
@@ -146,7 +147,7 @@ with the trajectory algorithm so we must consolidate nodes to simplify the graph
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -163,7 +164,7 @@ with the trajectory algorithm so we must consolidate nodes to simplify the graph
       &copy;2022, Saadiq Mohiuddin.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

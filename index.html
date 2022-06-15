@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Drivecycle 0.1.0 Documentation &#8212; Drivecycle 0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,22 +35,22 @@
           <div class="body" role="main">
             
   <section id="drivecycle-0-1-0-documentation">
-<h1>Drivecycle 0.1.0 Documentation<a class="headerlink" href="#drivecycle-0-1-0-documentation" title="Permalink to this headline">¶</a></h1>
+<h1>Drivecycle 0.1.0 Documentation<a class="headerlink" href="#drivecycle-0-1-0-documentation" title="Permalink to this heading">¶</a></h1>
 <p><strong>Drivecycle</strong> is a python package that simulates complex velocity-time profiles for public
 transit buses while taking into account stop and intersection locations along with speed limits.
 Drivecycle also simulates battery state of charge given bus (i.e. mass, battery type/capacity, etc.)
 and route (i.e. elevation change) characteristics.</p>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
 <p>To use Drivecycle, first install it using pip:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>pip install drivecycle
 </pre></div>
 </div>
 </section>
 <section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
 <section id="plot-simple-tragectories">
-<h3>Plot Simple Tragectories<a class="headerlink" href="#plot-simple-tragectories" title="Permalink to this headline">¶</a></h3>
+<h3>Plot Simple Tragectories<a class="headerlink" href="#plot-simple-tragectories" title="Permalink to this heading">¶</a></h3>
 <p>The trajectory function can be used to generate a trajectory given some contraints such as distance,
 acceleration and start/end/target velocities. This current release only models constant acceleration trajectories however other models may be added in future.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">drivecycle</span> <span class="kn">import</span> <span class="n">route</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">,</span> <span class="n">plots</span>
@@ -62,7 +63,7 @@ acceleration and start/end/target velocities. This current release only models c
 <img alt="_images/plot_vt.png" src="_images/plot_vt.png" />
 </section>
 <section id="generate-drive-cycle">
-<h3>Generate Drive Cycle<a class="headerlink" href="#generate-drive-cycle" title="Permalink to this headline">¶</a></h3>
+<h3>Generate Drive Cycle<a class="headerlink" href="#generate-drive-cycle" title="Permalink to this heading">¶</a></h3>
 <p>Trajectories are grouped together to form drive cycles of a given path.
 See sample drive cycle input path. The <cite>drivecycle</cite> function may include a <cite>stops</cite> parameter
 that constrains which nodes (i.e. street interseciton or bus stops) the vehicle must stop
@@ -84,7 +85,7 @@ at and for how long.</p>
 <img alt="_images/drivecycle_vt.png" src="_images/drivecycle_vt.png" />
 </section>
 <section id="sample-path-input">
-<h3>Sample Path Input<a class="headerlink" href="#sample-path-input" title="Permalink to this headline">¶</a></h3>
+<h3>Sample Path Input<a class="headerlink" href="#sample-path-input" title="Permalink to this heading">¶</a></h3>
 <p>A path graph data structure is created using OpenStreetMap (OSM) taxonomy.
 <cite>intersection</cite> denotes the edge that intersects the end node and may be another OSM <cite>way</cite>
 or simply a bus stop. For example <cite>“intersection”:[“primary”]</cite> indicates a primary road
@@ -130,7 +131,7 @@ intersecting the end node.</p>
 </div>
 </section>
 <section id="generate-path-graph">
-<h3>Generate Path Graph<a class="headerlink" href="#generate-path-graph" title="Permalink to this headline">¶</a></h3>
+<h3>Generate Path Graph<a class="headerlink" href="#generate-path-graph" title="Permalink to this heading">¶</a></h3>
 <p>Drive Cycle include utils that can used to generate graphs usting <cite>networkx</cite>.
 These are helpful to simplify path graphs to reduce redundant nodes and edges that may cause
 trajectories to fail. It can also be used to embed stops in a given path graph.</p>
@@ -156,7 +157,7 @@ trajectories to fail. It can also be used to embed stops in a given path graph.<
 </div>
 </section>
 <section id="generate-drivecycle-using-valhalla-trace-attributes">
-<h3>Generate Drivecycle using Valhalla Trace Attributes<a class="headerlink" href="#generate-drivecycle-using-valhalla-trace-attributes" title="Permalink to this headline">¶</a></h3>
+<h3>Generate Drivecycle using Valhalla Trace Attributes<a class="headerlink" href="#generate-drivecycle-using-valhalla-trace-attributes" title="Permalink to this heading">¶</a></h3>
 <p>Valhalla’s map matching API can be used to match a bus route geometry to OSM way ids.
 This can help us determine both road speeds and intersection locations along a route.
 Using the map matching Trace Attributes action, we can get a list of OSM edges the bus route
@@ -191,7 +192,7 @@ the entire route:</p>
 <img alt="_images/route_drivecycle.png" src="_images/route_drivecycle.png" />
 </section>
 <section id="electric-bus-battery-depth-of-discharge">
-<h3>Electric Bus Battery Depth of Discharge<a class="headerlink" href="#electric-bus-battery-depth-of-discharge" title="Permalink to this headline">¶</a></h3>
+<h3>Electric Bus Battery Depth of Discharge<a class="headerlink" href="#electric-bus-battery-depth-of-discharge" title="Permalink to this heading">¶</a></h3>
 <p>Using the drive we generated of the route, we can model the the battery depth of discharge
 of a battery electric bus using characteristics of the bus and batteries cells.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">power</span> <span class="o">=</span> <span class="n">energy</span><span class="o">.</span><span class="n">battery_model</span><span class="p">(</span>
@@ -208,7 +209,7 @@ of a battery electric bus using characteristics of the bus and batteries cells.<
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="drivecycle.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="valhalla.html">Valhalla Map Matching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="battery.html"><span class="sectnum">1</span> Battery Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="battery.html"><span class="sectnum">1 </span>Battery Model</a></li>
 </ul>
 </div>
 </section>
@@ -235,7 +236,7 @@ of a battery electric bus using characteristics of the bus and batteries cells.<
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="drivecycle.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="valhalla.html">Valhalla Map Matching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="battery.html"><span class="sectnum">1</span> Battery Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="battery.html"><span class="sectnum">1 </span>Battery Model</a></li>
 </ul>
 
 <div class="relations">
@@ -255,7 +256,7 @@ of a battery electric bus using characteristics of the bus and batteries cells.<
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -272,7 +273,7 @@ of a battery electric bus using characteristics of the bus and batteries cells.<
       &copy;2022, Saadiq Mohiuddin.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
