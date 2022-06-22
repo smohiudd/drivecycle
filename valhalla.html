@@ -17,7 +17,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="1 Battery Model" href="battery.html" />
+    <link rel="next" title="1 Energy Model" href="energy.html" />
     <link rel="prev" title="API Reference" href="drivecycle.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -40,7 +40,7 @@
 <p>To generate complete drive cycles for bus routes we can utilize the open routing engine <a class="reference external" href="https://valhalla.readthedocs.io/en/latest/">Valhalla</a> to
 match route shapes to OSM ways. Valhalla has a <a class="reference external" href="https://valhalla.readthedocs.io/en/latest/api/map-matching/api-reference/">map matching API</a> and we use the trace attributes call
 to get detailed information (attributes) along the route. The repsonse is a path graph which includes
-sectoins of way_ids along with details such as speed, road class and node intersecting edge road class.</p>
+sections of <cite>way_ids`</cite> along with details such as speed, road class and node intersecting edge road class.</p>
 <p>This information is critical to develop drivecycle profile along the route taking into account speed
 and stop locations.</p>
 <p>An example POST request to the API may look somehting like this:</p>
@@ -126,7 +126,7 @@ with the trajectory algorithm so we must consolidate nodes to simplify the graph
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="drivecycle.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Valhalla Map Matching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="battery.html"><span class="sectnum">1 </span>Battery Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="energy.html"><span class="sectnum">1 </span>Energy Model</a></li>
 </ul>
 
 <div class="relations">
@@ -134,7 +134,7 @@ with the trajectory algorithm so we must consolidate nodes to simplify the graph
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="drivecycle.html" title="previous chapter">API Reference</a></li>
-      <li>Next: <a href="battery.html" title="next chapter"><span class="sectnum">1 </span>Battery Model</a></li>
+      <li>Next: <a href="energy.html" title="next chapter"><span class="sectnum">1 </span>Energy Model</a></li>
   </ul></li>
 </ul>
 </div>
@@ -164,7 +164,7 @@ with the trajectory algorithm so we must consolidate nodes to simplify the graph
       &copy;2022, Saadiq Mohiuddin.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

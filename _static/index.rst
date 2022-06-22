@@ -6,9 +6,8 @@
 Drivecycle 0.1.0 Documentation
 ======================================
 
-**Drivecycle** is a python package that simulates complex velocity-time profiles for public 
-transit buses while taking into account stop and intersection locations along with speed limits. 
-Drivecycle also simulates battery state of charge given bus (i.e. mass, battery type/capacity, etc.) 
+**Drivecycle** is a python package that simulates complex velocity-time profiles for electric vehicles while taking into account stop and intersection locations along with speed limits. 
+Drivecycle also simulates battery state of charge (Soc) given vehicle (i.e. mass, battery capacity, etc.) 
 and route (i.e. elevation change) characteristics.
 
 Installation
@@ -45,7 +44,7 @@ Generate Drive Cycle
 
 Trajectories are grouped together to form drive cycles of a given path. 
 See sample drive cycle input path. The `drivecycle` function may include a `stops` parameter 
-that constrains which nodes (i.e. street interseciton or bus stops) the vehicle must stop 
+that constrains which nodes (i.e. street interseciton or stop locations) the vehicle must stop 
 at and for how long. 
 
 .. code-block:: python
@@ -71,7 +70,7 @@ Sample Path Input
 
 A path graph data structure is created using OpenStreetMap (OSM) taxonomy. 
 `intersection` denotes the edge that intersects the end node and may be another OSM `way` 
-or simply a bus stop. For example `"intersection":["primary"]` indicates a primary road 
+or simply a stop location. For example `"intersection":["primary"]` indicates a primary road 
 intersecting the end node. 
 
 .. code-block:: python
@@ -147,9 +146,9 @@ trajectories to fail. It can also be used to embed stops in a given path graph.
 Generate Drivecycle using Valhalla Trace Attributes
 ####################################################
 
-Valhalla's map matching API can be used to match a bus route geometry to OSM way ids. 
+Valhalla's map matching API can be used to match a route geometry to OSM way ids. 
 This can help us determine both road speeds and intersection locations along a route. 
-Using the map matching Trace Attributes action, we can get a list of OSM edges the bus route 
+Using the map matching Trace Attributes action, we can get a list of OSM edges the route 
 travels along:
 
 .. code-block:: python
@@ -184,29 +183,26 @@ the entire route:
 .. image:: ../../images/route_drivecycle.png
 
 
-Electric Bus Battery Depth of Discharge
-#######################################
+Electric Vehicle Battery State of Charge (SoC)
+###############################################
 
-Using the drive we generated of the route, we can model the the battery depth of discharge
-of a battery electric bus using characteristics of the bus and batteries cells.
+Using the drive we generated of the route, we can model the the battery state of charge (SoC)
+of a battery electric vehicle using characteristics of the bus and batteries cells.
 
 .. code-block:: python
 
-   power = energy.battery_model(
+   power = energy.energy_model(
       dc, # drivecycle
       m=15000, # mass in kg
-      regen_ratio=0.5, # regeneration ratio
-      num_cells=350, # number of battery cells
-      capacity=75, # Amp hour capacity
-      battery_type="LI-ION", # battery chemistry
+      capacity=500, # battery capacity in kWh
    )
 
-
+.. image:: ../../images/Soc_chart.png
 
 .. toctree::
    :maxdepth: 1
 
    drivecycle
    valhalla
-   battery
+   energy
 

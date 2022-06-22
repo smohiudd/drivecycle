@@ -36,9 +36,8 @@
             
   <section id="drivecycle-0-1-0-documentation">
 <h1>Drivecycle 0.1.0 Documentation<a class="headerlink" href="#drivecycle-0-1-0-documentation" title="Permalink to this heading">¶</a></h1>
-<p><strong>Drivecycle</strong> is a python package that simulates complex velocity-time profiles for public
-transit buses while taking into account stop and intersection locations along with speed limits.
-Drivecycle also simulates battery state of charge given bus (i.e. mass, battery type/capacity, etc.)
+<p><strong>Drivecycle</strong> is a python package that simulates complex velocity-time profiles for electric vehicles while taking into account stop and intersection locations along with speed limits.
+Drivecycle also simulates battery state of charge (Soc) given vehicle (i.e. mass, battery capacity, etc.)
 and route (i.e. elevation change) characteristics.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
@@ -66,7 +65,7 @@ acceleration and start/end/target velocities. This current release only models c
 <h3>Generate Drive Cycle<a class="headerlink" href="#generate-drive-cycle" title="Permalink to this heading">¶</a></h3>
 <p>Trajectories are grouped together to form drive cycles of a given path.
 See sample drive cycle input path. The <cite>drivecycle</cite> function may include a <cite>stops</cite> parameter
-that constrains which nodes (i.e. street interseciton or bus stops) the vehicle must stop
+that constrains which nodes (i.e. street interseciton or stop locations) the vehicle must stop
 at and for how long.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># What nodes should we stop at and for how long (seconds)</span>
 <span class="n">stop</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;bus_stop&quot;</span><span class="p">:</span><span class="mi">30</span><span class="p">,</span><span class="s2">&quot;tertiary&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">}</span>
@@ -88,7 +87,7 @@ at and for how long.</p>
 <h3>Sample Path Input<a class="headerlink" href="#sample-path-input" title="Permalink to this heading">¶</a></h3>
 <p>A path graph data structure is created using OpenStreetMap (OSM) taxonomy.
 <cite>intersection</cite> denotes the edge that intersects the end node and may be another OSM <cite>way</cite>
-or simply a bus stop. For example <cite>“intersection”:[“primary”]</cite> indicates a primary road
+or simply a stop location. For example <cite>“intersection”:[“primary”]</cite> indicates a primary road
 intersecting the end node.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="p">[</span>
    <span class="p">{</span>
@@ -158,9 +157,9 @@ trajectories to fail. It can also be used to embed stops in a given path graph.<
 </section>
 <section id="generate-drivecycle-using-valhalla-trace-attributes">
 <h3>Generate Drivecycle using Valhalla Trace Attributes<a class="headerlink" href="#generate-drivecycle-using-valhalla-trace-attributes" title="Permalink to this heading">¶</a></h3>
-<p>Valhalla’s map matching API can be used to match a bus route geometry to OSM way ids.
+<p>Valhalla’s map matching API can be used to match a route geometry to OSM way ids.
 This can help us determine both road speeds and intersection locations along a route.
-Using the map matching Trace Attributes action, we can get a list of OSM edges the bus route
+Using the map matching Trace Attributes action, we can get a list of OSM edges the route
 travels along:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;end_node&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;street_intersection&#39;</span><span class="p">,</span>
    <span class="s1">&#39;elapsed_time&#39;</span><span class="p">:</span> <span class="mf">0.698</span><span class="p">,</span>
@@ -191,25 +190,23 @@ travels along:</p>
 the entire route:</p>
 <img alt="_images/route_drivecycle.png" src="_images/route_drivecycle.png" />
 </section>
-<section id="electric-bus-battery-depth-of-discharge">
-<h3>Electric Bus Battery Depth of Discharge<a class="headerlink" href="#electric-bus-battery-depth-of-discharge" title="Permalink to this heading">¶</a></h3>
-<p>Using the drive we generated of the route, we can model the the battery depth of discharge
-of a battery electric bus using characteristics of the bus and batteries cells.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">power</span> <span class="o">=</span> <span class="n">energy</span><span class="o">.</span><span class="n">battery_model</span><span class="p">(</span>
+<section id="electric-vehicle-battery-state-of-charge-soc">
+<h3>Electric Vehicle Battery State of Charge (SoC)<a class="headerlink" href="#electric-vehicle-battery-state-of-charge-soc" title="Permalink to this heading">¶</a></h3>
+<p>Using the drive we generated of the route, we can model the the battery state of charge (SoC)
+of a battery electric vehicle using characteristics of the bus and batteries cells.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">power</span> <span class="o">=</span> <span class="n">energy</span><span class="o">.</span><span class="n">energy_model</span><span class="p">(</span>
    <span class="n">dc</span><span class="p">,</span> <span class="c1"># drivecycle</span>
    <span class="n">m</span><span class="o">=</span><span class="mi">15000</span><span class="p">,</span> <span class="c1"># mass in kg</span>
-   <span class="n">regen_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="c1"># regeneration ratio</span>
-   <span class="n">num_cells</span><span class="o">=</span><span class="mi">350</span><span class="p">,</span> <span class="c1"># number of battery cells</span>
-   <span class="n">capacity</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="c1"># Amp hour capacity</span>
-   <span class="n">battery_type</span><span class="o">=</span><span class="s2">&quot;LI-ION&quot;</span><span class="p">,</span> <span class="c1"># battery chemistry</span>
+   <span class="n">capacity</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="c1"># battery capacity in kWh</span>
 <span class="p">)</span>
 </pre></div>
 </div>
+<img alt="_images/Soc_chart.png" src="_images/Soc_chart.png" />
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="drivecycle.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="valhalla.html">Valhalla Map Matching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="battery.html"><span class="sectnum">1 </span>Battery Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="energy.html"><span class="sectnum">1 </span>Energy Model</a></li>
 </ul>
 </div>
 </section>
@@ -236,7 +233,7 @@ of a battery electric bus using characteristics of the bus and batteries cells.<
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="drivecycle.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="valhalla.html">Valhalla Map Matching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="battery.html"><span class="sectnum">1 </span>Battery Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="energy.html"><span class="sectnum">1 </span>Energy Model</a></li>
 </ul>
 
 <div class="relations">
@@ -273,7 +270,7 @@ of a battery electric bus using characteristics of the bus and batteries cells.<
       &copy;2022, Saadiq Mohiuddin.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

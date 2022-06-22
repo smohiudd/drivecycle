@@ -4,7 +4,7 @@ Valhalla Map Matching
 To generate complete drive cycles for bus routes we can utilize the open routing engine `Valhalla <https://valhalla.readthedocs.io/en/latest/>`_ to 
 match route shapes to OSM ways. Valhalla has a `map matching API <https://valhalla.readthedocs.io/en/latest/api/map-matching/api-reference/>`_ and we use the trace attributes call
 to get detailed information (attributes) along the route. The repsonse is a path graph which includes 
-sectoins of way_ids along with details such as speed, road class and node intersecting edge road class.
+sections of `way_ids`` along with details such as speed, road class and node intersecting edge road class.
 
 This information is critical to develop drivecycle profile along the route taking into account speed 
 and stop locations. 

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>1 Battery Model &#8212; Drivecycle 0.1.0 documentation</title>
+    <title>1 Energy Model &#8212; Drivecycle 0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="_static/./css/custom.css" />
@@ -35,8 +35,8 @@
 
           <div class="body" role="main">
             
-  <section id="battery-model">
-<h1><span class="sectnum">1 </span>Battery Model<a class="headerlink" href="#battery-model" title="Permalink to this heading">¶</a></h1>
+  <section id="energy-model">
+<h1><span class="sectnum">1 </span>Energy Model<a class="headerlink" href="#energy-model" title="Permalink to this heading">¶</a></h1>
 <p>The battery module is used to simulate battery power requirements and battery
 state of charger for a battery electric bus. It is determined using the following
 steps.</p>
@@ -90,20 +90,44 @@ steps.</p>
 <div class="math notranslate nohighlight">
 \[P_t = F_t v\]</div>
 </section>
-<section id="energy-flow">
-<h2><span class="sectnum">1.3 </span>Energy Flow<a class="headerlink" href="#energy-flow" title="Permalink to this heading">¶</a></h2>
-<figure class="align-default" id="id2">
-<img alt="_images/energy_flow.png" src="_images/energy_flow.png" />
-<figcaption>
-<p><span class="caption-text">Electric Vehicle Technology Explained Second Edition</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
+<section id="id2">
+<h2><span class="sectnum">1.3 </span>Energy Model<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<p>Depending on if the vehicle is accelerating or decelerating power may be supplied to or extracted from the the battery.</p>
+<p>Considering the following component efficiencies:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\eta_m\)</span>, motor efficiency</p></li>
+<li><p><span class="math notranslate nohighlight">\(\eta_t\)</span>, transmission efficiency</p></li>
+<li><p><span class="math notranslate nohighlight">\(\eta_c\)</span>, power converter efficiency</p></li>
+</ul>
+<p>We can determine the power going into or out of the battery using the following equations:</p>
+<p>Torque at the wheel,</p>
+<div class="math notranslate nohighlight">
+\[T_w = F_t \times r_w\]</div>
+<p>Torque at the motor,</p>
+<div class="math notranslate nohighlight">
+\[T_m = {\dfrac{T_w}{Gear Ratio \times \eta_T}}\]</div>
+<p>Rotational speed of the wheels,</p>
+<div class="math notranslate nohighlight">
+\[\omega_w = {\dfrac{v}{r_w}}\]</div>
+<p>Rotational speed of the motor,</p>
+<div class="math notranslate nohighlight">
+\[\omega_m = {\dfrac{\omega_w}{Gear Ratio}}\]</div>
+<p>Finally, the instatneous power supplied by the battery is,</p>
+<div class="math notranslate nohighlight">
+\[P = {\dfrac{T_m \times \omega_m}{\eta_m \times \eta_c}}\]</div>
+<p>When the vehicle is decelerating, a propotion of he braking force may be used for regeneration.</p>
+<div class="math notranslate nohighlight">
+\[F_{reg} = RegenRatio \times F_t\]</div>
+<p>And the power supplied to the battery can be determined as follow:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}T_{reg} = F_{reg} \times r_w\\
+P = {\dfrac{T_{reg} \times \omega_m}{\eta_m \times \eta_c}}\end{aligned}\end{align} \]</div>
 </section>
 <section id="references">
 <h2><span class="sectnum">1.4 </span>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
-<li><p>Electric Vehicle Technology Explained Second Edition</p></li>
-<li><p>A Study on the Open Circuit Voltage and State of Charge Characterization of High Capacity Lithium-Ion Battery Under Different Temperature</p></li>
+<li><p>Franca, A. (2015). Electricity consumption and battery lifespan estimation for transit electric buses: drivetrain simulation and electrochemical modelling. Masters Thesis. University of Victoria.</p></li>
+<li><p>Larmine, J., Lowry J. (2012). Electric Vehicle Technology Explained Second Edition. Wiley.</p></li>
 </ol>
 </section>
 </section>
@@ -128,7 +152,7 @@ steps.</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="drivecycle.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="valhalla.html">Valhalla Map Matching</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#"><span class="sectnum">1 </span>Battery Model</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><span class="sectnum">1 </span>Energy Model</a></li>
 </ul>
 
 <div class="relations">
@@ -165,11 +189,11 @@ steps.</p>
       &copy;2022, Saadiq Mohiuddin.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="_sources/battery.rst.txt"
+      <a href="_sources/energy.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
