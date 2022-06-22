@@ -92,7 +92,7 @@ def battery_model(traj: List[float],
                   **kwargs: str) -> npt.NDArray[Any]:
     """Battery Depth of Discharge (DoD) modelling.
 
-    Battery depth of discharge modelling using calculation for 
+    Battery depth of discharge modelling using calculations for 
     current draw from the battery.
 
     Args:
@@ -201,7 +201,7 @@ def battery_power(
 ) -> float:
     """Battery power modelling.
 
-    Extended description...
+    Calculate power supplied from or transfer to the battery. 
 
     Args:
         v (float): velocity (m/s)
@@ -274,7 +274,7 @@ def tractive_force(
 ) -> Any:
     """Tractive force.
 
-    Extended description...
+    Calculation of the force propelling the vehicles forward transferred through the drive wheels.
 
     Args:
         v (float): velocity (m/s)
@@ -313,7 +313,11 @@ def tractive_force(
 def open_circuit_voltage(x: float, type: str = "LA") -> float:
     """Open Circiut Voltage.
 
-    Extended description...
+    Li-ion open circuit volage as found in:
+
+    Zhang R. et. al. (2018). A Study on Open Circuit Voltage and State of Charge
+    Characterization of High Capacity Lithium-Ion Battery Under Different Temperature.
+    Energies 2018, 1, 2408.
 
     Args:
         x (float): Depth of Discharge
@@ -321,6 +325,7 @@ def open_circuit_voltage(x: float, type: str = "LA") -> float:
 
     Returns:
         float: open circuit voltage
+
 
     """
 

@@ -20,6 +20,9 @@ def const_accel(vi: float = 0.0,
     velocity phase will not be reached in which case we only have
     a acceleration and deceleration phase.
 
+    Biagiotti, L., Melchiorri, C. (2008). Trajectory Planning for Automatic Machines
+    and Robots. Springer-Verlag.
+
     Args:
         vi (float): initial velocity 
         v_target (float): target velocity 
