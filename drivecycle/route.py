@@ -75,24 +75,35 @@ def sequential(edges: List[Dict[str, Any]],
             else:
                 vf = v_target_next
 
-        try:
-            d = trajectory.const_accel(vi=vi,
-                                       v_target=v_target,
-                                       vf=vf,
-                                       di=di,
-                                       df=df,
-                                       ti=ti,
-                                       step=step,
-                                       a_max=a)
-        except AssertionError: # if the trajectory is not feasible then use a constant velocity
-            tf = (df - di) * vi  # Constant veclocity using initial
-            d = np.array([[ti, vi, di], [tf, vi, df]])
-            logging.info(
-                f'Could not complete segment: vi: {vi:.2f} , vf: {vf:.2f}, \
-                    v_target:{v_target:.2f}, length: {edges[i]["length"]:.2f}')
+        while True:
+            try:
+                d = trajectory.const_accel(vi=vi,
+                                        v_target=v_target,
+                                        vf=vf,
+                                        di=di,
+                                        df=df,
+                                        ti=ti,
+                                        step=step,
+                                        a_max=a)
+                break
+            except AssertionError: # if the trajectory segment is not feasible then try the following:
+                if v_target !=0 and vf!=0: # (1) reduce v_target and vf by 10% if they are not both zero
+                    v_target = v_target*.9
+                    vf = vf*.9
+                    logging.info(f"Vi: {vi:.2f}. Reducing vf to {vf:.2f} and v_target to {v_target:.2f} at time {ti} and segment length {df-di}")
+                else: 
+                    if vi!=0: # (2) if that doesn't work then use a constant velocity accross the segment
+                        tf = (df - di)/vi  # Constant veclocity using vi
+                        d = np.array([[ti, vi, di], [ti+tf, vi, df]])
+                        logging.info(
+                            f'NEW Could not complete segment: ti: {ti:.2f}, tf: {tf:.2f},  vi: {vi:.2f} , vf: {vf:.2f}, \
+                                v_target:{v_target:.2f}, length: {edges[i]["length"]:.2f}')
+                        break
+                    else: # (3) if vi==0 then can't complete this segment
+                        raise ValueError('Cannot create trajectory using input values.')
+
 
         if stop:
-
             stop_id = next(x for x in keys if x in edges[i]["intersection"])
             stop_max_time = stops[stop_id]
             stop_time = np.random.randint(5, stop_max_time)
