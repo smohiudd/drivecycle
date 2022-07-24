@@ -47,6 +47,8 @@ def sequential(edges: List[Dict[str, Any]],
 
     a = a_max
 
+    carryoverdistance = None
+
     for i in range(len(edges)):
 
         if kmh:
@@ -60,7 +62,11 @@ def sequential(edges: List[Dict[str, Any]],
             v_target_next = 0
 
         v_target = edges[i]["speed"] * conversion
-        df = di + edges[i]["length"]
+        if carryoverdistance:
+            df = di + edges[i]["length"]+carryoverdistance
+            carryoverdistance=None
+        else:
+            df = di + edges[i]["length"]
 
         if any(x in list(stops.keys())
                for x in edges[i]["intersection"]) and stop_at_node:
@@ -68,7 +74,7 @@ def sequential(edges: List[Dict[str, Any]],
 
         if stop:
             vf = 0
-            a = 2
+            a = 1
         else:
             if v_target_next >= v_target:
                 vf = v_target
@@ -87,20 +93,23 @@ def sequential(edges: List[Dict[str, Any]],
                                         a_max=a)
                 break
             except AssertionError: # if the trajectory segment is not feasible then try the following:
-                if v_target !=0 and vf!=0: # (1) reduce v_target and vf by 10% if they are not both zero
+                if v_target>=1.0 and vf>=1.0: # (1) reduce v_target and vf by 10% if they are not both less than 1 m/s
                     v_target = v_target*.9
                     vf = vf*.9
                     logging.info(f"Vi: {vi:.2f}. Reducing vf to {vf:.2f} and v_target to {v_target:.2f} at time {ti} and segment length {df-di}")
                 else: 
-                    if vi!=0: # (2) if that doesn't work then use a constant velocity accross the segment
+                    if vi!=0.0: # (2) if that doesn't work then use a constant velocity accross the segment
                         tf = (df - di)/vi  # Constant veclocity using vi
                         d = np.array([[ti, vi, di], [ti+tf, vi, df]])
                         logging.info(
-                            f'NEW Could not complete segment: ti: {ti:.2f}, tf: {tf:.2f},  vi: {vi:.2f} , vf: {vf:.2f}, \
+                            f'Could not complete segment: ti: {ti:.2f}, tf: {tf:.2f},  vi: {vi:.2f} , vf: {vf:.2f}, \
                                 v_target:{v_target:.2f}, length: {edges[i]["length"]:.2f}')
                         break
-                    else: # (3) if vi==0 then can't complete this segment
-                        raise ValueError('Cannot create trajectory using input values.')
+                    else: # (3) if vi==0 then can't complete this segment. Carry over the distance for this segment to the next segment
+                        d = np.array([[ti, vi, di]])
+                        carryoverdistance = df-di
+                        logging.info('Carry over segment length to next segment')
+                        break
 
 
         if stop:
