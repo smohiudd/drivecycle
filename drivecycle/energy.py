@@ -77,7 +77,7 @@ def energy_model(traj: List[float],
 
             #print(f"Power: {power}, Einst: {Einst}, SOC: {Einst/capacity}")
             
-            data[i + 1, 3] = power
+            data[i + 1, 3] = data[i,3] + Einst
             data[i + 1, 4] = data[i,4] - (Einst/capacity)
 
     return data
