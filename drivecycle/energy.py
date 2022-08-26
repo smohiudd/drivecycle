@@ -20,7 +20,7 @@ def energy_model(traj: List[float],
         power_aux (float): auxiliary load on the vehicle (kWh)
 
     Returns:
-        list: (n,5) numpy array of time, velocity, distance, power, SoC
+        list: (n,5) numpy array of time, velocity, distance, cumulative power, SoC
     """
 
     data = np.c_[traj, np.zeros((len(traj), 2))]  # Power, SoC
@@ -43,8 +43,11 @@ def energy_model(traj: List[float],
             data[i + 1, 3:5] = data[i, 3:5]
         else:
             if elv is not None:
-                alpha = (elv_f(d1) - elv_f(d0)) / (d1 - d0)
-
+                try:
+                    alpha = (elv_f(d1) - elv_f(d0)) / (d1 - d0)
+                except ValueError: # d1 or d0 is outside elv range, don't include alpha in calcluation
+                    alpha = None
+                
             # determine tractive force
             trac_force_kwargs = list(
                 inspect.signature(tractive_force).parameters)
@@ -71,7 +74,7 @@ def energy_model(traj: List[float],
             )
 
             # Include accessory/auxiliary power
-            power = (power_batt + power_aux)/1000 # Total power in kW
+            power = (power_batt/1000) + power_aux # Total power in kW
 
             Einst = power * ((t1-t0)/3600) # Instantaneous energy in kWh
 
