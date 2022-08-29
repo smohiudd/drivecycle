@@ -1,6 +1,6 @@
 # Drive Cycle
 
-Drivecycle is a python package that simulates complex velocity-time profiles for public transit buses while taking into account stop and intersection locations along with speed limits. Drivecycle also simulates battery state of charge given bus (i.e. mass, battery type/capacity, etc.) and route (i.e. elevation change) characteristics.
+Drivecycle is a python package that simulates complex velocity-time profiles for vehicles while taking into account stop and intersection locations along with speed limits. Drivecycle also simulates battery state of charge given vehicle (i.e. mass, battery type/capacity, etc.) and route (i.e. elevation change) characteristics.
 
 Read the documentation for more details: https://saadiqm.com/drivecycle
 
@@ -105,7 +105,7 @@ route_graph.get_edges()
 
 ### Generate Drivecycle using Valhalla Trace Attributes
 
-Valhalla's [map matching API](https://valhalla.readthedocs.io/en/latest/api/map-matching/api-reference/) can be used to match a bus route geometry to OSM way ids. This can help us determine both road speeds and intersection locations along a route. Using the map matching Trace Attributes action, we can get a list of OSM edges the bus route travels along:
+Valhalla's [map matching API](https://valhalla.readthedocs.io/en/latest/api/map-matching/api-reference/) can be used to match a vehicle route geometry to OSM way ids. This can help us determine both road speeds and intersection locations along a route. Using the map matching Trace Attributes action, we can get a list of OSM edges the vehicle route travels along:
 
 ```python
 [{'end_node': {'type': 'street_intersection',
