@@ -82,8 +82,8 @@ def _df_transformation(
 def sequential(
     df: DataFrame,
     stops: Dict[str, int],
-    a_max: float = 1,
-    step: float = 0.1,
+    a_max: float = 2,
+    step: float = 1,
     ) -> np.ndarray:
 
     output = _df_transformation(df, stops)
