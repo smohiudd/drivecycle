@@ -1,134 +1,99 @@
 import numpy as np
 from drivecycle import trajectory
+from geopandas import GeoDataFrame
+from pandas import DataFrame
+from typing import Union
+import math
 
 from typing import List, Dict, Any
 # import numpy.typing as npt
 
-import logging
+def _should_stop(
+    x: Any, 
+    stop_params: Dict[str, int])->int:
 
-logging.getLogger().setLevel(logging.INFO)
+    if isinstance(x, list):
+        if any(i in x for i in list(stop_params.keys())):
+            return np.random.randint(2)
+        else:
+            return 0
 
+def _get_vf(x: Any)->float:
+    if x["stop"]:
+        return 0
+    else:
+        if x["v_target_next"] >= x["v_target"]:
+            return x["v_target"]
+        else:
+            return x["v_target_next"]
 
-def sequential(edges: List[Dict[str, Any]],
-               stops: Dict[str, int],
-               di: float = 0,
-               vi: float = 0,
-               ti: float = 0,
-               a_max: float = 1,
-               step: float = 0.1,
-               stop_at_node: bool = False,
-               kmh: bool = True) -> 'np.ndarray':  # type: ignore
-    """Generate route drivecycle.
-
-    Generate a drivecycle which is formed from a collection or 
-    sequence of trajectories. 
-
-    Args:
-        edges (list): list of dictionary of route edges
-        stops (dict): dict of stops categories and stop durations
-        di (float): initial position
-        vi (float): initial velocity
-        ti (float): initial time
-        a_max (float): maximum acceleration
-        step (float): time step
-        kmh (bool): kilometers per hour
-
-    Returns:
-        list: (n,3) numpy array of time, velocity, distance of drivecycle
-
+def _get_trajectory(
+    x: Any,
+    step: float=1.0, 
+    a_max: float=2.0):
     """
-
-    tvq = np.array([(ti, vi, di)])
-
-    stop = None
-    conversion = 1000 / 3600
-
-    keys = list(stops.keys())
-
-    a = a_max
-
-    carryoverdistance = None
-
-    for i in range(len(edges)):
-
-        if kmh:
-            conversion = 1000 / 3600
+    "x","x_","d", "vi","v_target","v_target_next","vf","stop"
+    """
+    stop_time=np.random.randint(30,120)
+    pad = math.floor(stop_time/step)
+    try:
+        traj = trajectory.const_accel(vi=x[3],
+                            v_target=x[4],
+                            vf=x[6],
+                            di=x[1],
+                            df=x[2]+x[1],
+                            ti=0,
+                            step=step,
+                            a_max=a_max)
+        
+        if x[7]:
+            vel = np.pad(traj[:,1], (0, pad), 'constant')
+            dist = np.pad(traj[:,2], (0, pad), 'edge')
+            return np.stack((vel,dist),axis=-1)
         else:
-            conversion = 1
+            return traj[:,1:3]
+    except Exception as e:
+        print(x[0], e)
+        return [0]
 
-        try:
-            v_target_next = edges[i + 1]["speed"] * conversion
-        except IndexError:
-            v_target_next = 0
+def _df_transformation(
+    df: Union[GeoDataFrame, DataFrame],
+    stop_params: Dict[str, int]
+    )-> np.ndarray:
 
-        v_target = edges[i]["speed"] * conversion
-        if carryoverdistance:
-            df = di + edges[i]["length"]+carryoverdistance
-            carryoverdistance=None
-        else:
-            df = di + edges[i]["length"]
+    df = df.rename(columns={"speed": "v_target", "lr":"x"})
 
-        if any(x in list(stops.keys())
-               for x in edges[i]["intersection"]) and stop_at_node:
-            stop = np.random.randint(2)
+    df["v_target_next"]=df["v_target"].shift(-1)
 
-        if stop:
-            vf = 0
-            a = 1
-        else:
-            if v_target_next >= v_target:
-                vf = v_target
-            else:
-                vf = v_target_next
+    df["stop"] = df["end"].apply(lambda x: _should_stop(x,stop_params))
 
-        while True:
-            try:
-                d = trajectory.const_accel(vi=vi,
-                                        v_target=v_target,
-                                        vf=vf,
-                                        di=di,
-                                        df=df,
-                                        ti=ti,
-                                        step=step,
-                                        a_max=a)
-                break
-            except AssertionError: # if the trajectory segment is not feasible then try the following:
-                if v_target>=1.0 and vf>=1.0: # (1) reduce v_target and vf by 10% if they are not both less than 1 m/s
-                    v_target = v_target*.9
-                    vf = vf*.9
-                    logging.info(f"Vi: {vi:.2f}. Reducing vf to {vf:.2f} and v_target to {v_target:.2f} at time {ti} and segment length {df-di}")
-                else: 
-                    if vi!=0.0: # (2) if that doesn't work then use a constant velocity accross the segment
-                        tf = (df - di)/vi  # Constant veclocity using vi
-                        d = np.array([[ti, vi, di], [ti+tf, vi, df]])
-                        logging.info(
-                            f'Could not complete segment: ti: {ti:.2f}, tf: {tf:.2f},  vi: {vi:.2f} , vf: {vf:.2f}, \
-                                v_target:{v_target:.2f}, length: {edges[i]["length"]:.2f}')
-                        break
-                    else: # (3) if vi==0 then can't complete this segment. Carry over the distance for this segment to the next segment
-                        d = np.array([[ti, vi, di]])
-                        carryoverdistance = df-di
-                        logging.info('Carry over segment length to next segment')
-                        break
+    df["vf"] = df.apply(_get_vf, axis=1)
+    df.loc[len(df.index)-1, 'vf'] = 0
 
+    df["x_"] = df["x"].shift(1,fill_value=0)
+    df["d"] = df.apply(lambda x: (x["x_"]-x["x"])*-1, axis=1)
 
-        if stop:
-            stop_id = next(x for x in keys if x in edges[i]["intersection"])
-            stop_max_time = stops[stop_id]
-            stop_time = np.random.randint(5, stop_max_time)
+    df["vi"] = df["vf"].shift(1,fill_value=0)
 
-            t = np.linspace(d[-1][0] + step, d[-1][0] + stop_time, 5)
-            v = np.zeros(5)
-            q = np.repeat(d[-1][2], 5)
-            s = np.column_stack((t, v, q))
-            d = np.concatenate([d, s])
+    output= df[["x","x_","d", "vi","v_target","v_target_next","vf","stop"]].to_numpy()
+    
+    return output
 
-        di = d[-1][2]
-        ti = d[-1][0]
-        vi = d[-1][1]
+def sequential(
+    df: DataFrame,
+    stops: Dict[str, int],
+    a_max: float = 1,
+    step: float = 0.1,
+    ) -> np.ndarray:
 
-        tvq = np.concatenate([tvq, d[:-1]])
+    output = _df_transformation(df, stops)
 
-        stop = 0
+    v = []
+    for i in range(output.shape[0]):
+        v.append(np.apply_along_axis(_get_trajectory, 0, output[i],step, a_max))
 
-    return tvq[1:]  # type: ignore
+    v_= np.concatenate(v)
+    t = np.arange(0, v_.shape[0], 1, dtype=int).reshape(v_.shape[0],1)
+    tvq = np.hstack((t, v_))
+
+    return tvq
