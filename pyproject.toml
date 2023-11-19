@@ -20,14 +20,29 @@ classifiers = [
 dynamic = ["version"]
 dependencies = [
     "numpy",
-    "networkx",
     "scipy",
-    "matplotlib"
+    "matplotlib",
+    "geopandas"
 ]
 
 [project.optional-dependencies]
 test = [
     "pytest"
+]
+dev = [
+    "black",
+    "flake8",
+    "isort",
+    "mypy",
+    "pytest",
+    "sphinx",
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests"
 ]
 
 [project.urls]

@@ -1,5 +1,5 @@
 import itertools
-from typing import List, Iterable, Any
+from typing import Any, Iterable, List
 
 
 def pairwise(iterable: List[Any]) -> Iterable[Any]:

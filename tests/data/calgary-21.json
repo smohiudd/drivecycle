@@ -1,10 +1,5 @@
 [
   {
-    "speed":0.0,
-    "end":"bus_stop",
-    "lr":0.0
-  },
-  {
     "speed":5.56,
     "end":"service_other",
     "lr":163.0
