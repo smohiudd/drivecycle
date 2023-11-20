@@ -6,4 +6,4 @@ Read the documentation for more details: https://saadiqm.com/drivecycle
 
 ## Examples
 
-(Example Notebook)[notebooks/Drivecycle-Example.ipynb]
+[Example Notebook](notebooks/Drivecycle-Example.ipynb)
