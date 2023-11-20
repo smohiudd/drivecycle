@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from geopandas import GeoDataFrame
 
-
+# https://github.com/gboeing/osmnx/blob/9aa78c543a5f27a1e8c770502cfcfe42cb228e9f/osmnx/simplification.py#L461
 def cluster_nodes(df: GeoDataFrame, buffer: int = 50) -> GeoDataFrame:
     df["x"] = df["lr"]
     df["y"] = 0

@@ -8,6 +8,27 @@ from pandas import DataFrame
 from drivecycle import trajectory
 
 
+def sequential(
+    df: DataFrame,
+    stops: Dict[str, int],
+    a_max: float = 2,
+    step: float = 1,
+) -> np.ndarray:
+    output = _df_transformation(df, stops)
+
+    v = []
+    for i in range(output.shape[0]):
+        v.append(np.apply_along_axis(_get_trajectory, 0, output[i], step, a_max))
+
+    v_ = np.concatenate(v)  # combine all the segments
+    t = np.arange(0, v_.shape[0], 1, dtype=int).reshape(
+        v_.shape[0], 1
+    )  # add time column to array
+    tvq = np.hstack((t, v_))
+
+    return tvq
+
+
 def _should_stop(x: Any, stop_params: Dict[str, int]) -> int:
     if isinstance(x, list):
         if any(i in x for i in list(stop_params.keys())):
@@ -21,7 +42,9 @@ def _get_vf(x: Any) -> float:
         return 0
     else:
         if x["v_target_next"] >= x["v_target"]:
-            return x["v_target"] # end speed should not be higher than current segment speed
+            return x[
+                "v_target"
+            ]  # end speed should not be higher than current segment speed
         else:
             return x["v_target_next"]
 
@@ -50,7 +73,7 @@ def _get_trajectory(x: Any, step: float = 1.0, a_max: float = 2.0):
         a_max=a_max,
     )
 
-    if vf == 0: #pad the trajectory with zeros for the stop duration
+    if vf == 0:  # pad the trajectory with zeros for the stop duration
         stop_time = np.random.randint(30, 120)
         pad = math.floor(stop_time / step)
         vel = np.pad(traj[:, 1], (0, pad), "constant")
@@ -77,7 +100,7 @@ def _df_transformation(
 
     # get final speed of current segment based on if stop or speed of next segment
     df["vf"] = df.apply(_get_vf, axis=1)
-    df.loc[len(df.index) - 1, "vf"] = 0 #final segment should have 0 speed
+    df.loc[len(df.index) - 1, "vf"] = 0  # final segment should have 0 speed
 
     # initial speed of current segment
     df["vi"] = df["vf"].shift(1, fill_value=0)
@@ -87,22 +110,3 @@ def _df_transformation(
     ].to_numpy()
 
     return output
-
-
-def sequential(
-    df: DataFrame,
-    stops: Dict[str, int],
-    a_max: float = 2,
-    step: float = 1,
-) -> np.ndarray:
-    output = _df_transformation(df, stops)
-
-    v = []
-    for i in range(output.shape[0]):
-        v.append(np.apply_along_axis(_get_trajectory, 0, output[i], step, a_max))
-
-    v_ = np.concatenate(v) #combine all the segments 
-    t = np.arange(0, v_.shape[0], 1, dtype=int).reshape(v_.shape[0], 1) #add time column to array
-    tvq = np.hstack((t, v_))
-
-    return tvq

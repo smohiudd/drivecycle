@@ -7,40 +7,6 @@ import pandas as pd
 from scipy import interpolate
 
 
-def _get_Einst(x, power_aux, **kwargs):
-    trac_force_kwargs = list(inspect.signature(tractive_force).parameters)
-    force = tractive_force(
-        x["v1"],
-        x["accel"],
-        alpha=x["alpha"],
-        **{i: kwargs[i] for i in kwargs if i in trac_force_kwargs},  # type: ignore
-    )
-
-    batt_power_kwargs = list(inspect.signature(battery_power).parameters)
-    power_batt = battery_power(
-        x["v1"],
-        force,
-        **{i: kwargs[i] for i in kwargs if i in batt_power_kwargs},  # type: ignore
-    )
-
-    power = (power_batt / 1000) + power_aux  # Total power in kW
-    return power * ((x["t1"] - x["t0"]) / 3600)
-
-
-def _get_elv(x, elv_f):
-    if elv_f is not None:
-        d = x["d1"] - x["d0"]
-        try:
-            if d != 0:
-                return (elv_f(x["d1"]) - elv_f(x["d0"])) / d
-            else:
-                return 0
-        except ValueError:
-            return 0
-    else:
-        return 0
-
-
 def energy_model(
     traj: List[float],
     elv: Optional[List[List[float]]] = None,
@@ -77,9 +43,9 @@ def energy_model(
     df["power"] = df["Einst"].cumsum()
     df["soc"] = (df["Einst"] / -capacity).cumsum() * 100
 
-    df = df[["t1", "v1", "d1", "power", "soc"]][:-1] # remove last row because of shift
+    df = df[["t1", "v1", "d1", "power", "soc"]][:-1]  # remove last row because of shift
 
-    return np.vstack((np.zeros((1, 5)), df.to_numpy())) # add row to zeros in first row 
+    return np.vstack((np.zeros((1, 5)), df.to_numpy()))  # add row to zeros in first row
 
 
 def battery_power(
@@ -172,3 +138,37 @@ def tractive_force(
     accel_force = m * accel
 
     return roll_resist_force + aero_drag_force + hill_climb_force + accel_force
+
+
+def _get_Einst(x, power_aux, **kwargs):
+    trac_force_kwargs = list(inspect.signature(tractive_force).parameters)
+    force = tractive_force(
+        x["v1"],
+        x["accel"],
+        alpha=x["alpha"],
+        **{i: kwargs[i] for i in kwargs if i in trac_force_kwargs},  # type: ignore
+    )
+
+    batt_power_kwargs = list(inspect.signature(battery_power).parameters)
+    power_batt = battery_power(
+        x["v1"],
+        force,
+        **{i: kwargs[i] for i in kwargs if i in batt_power_kwargs},  # type: ignore
+    )
+
+    power = (power_batt / 1000) + power_aux  # Total power in kW
+    return power * ((x["t1"] - x["t0"]) / 3600)
+
+
+def _get_elv(x, elv_f):
+    if elv_f is not None:
+        d = x["d1"] - x["d0"]
+        try:
+            if d != 0:
+                return (elv_f(x["d1"]) - elv_f(x["d0"])) / d
+            else:
+                return 0
+        except ValueError:
+            return 0
+    else:
+        return 0
