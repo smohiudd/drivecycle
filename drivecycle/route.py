@@ -18,14 +18,12 @@ def _should_stop(x: Any, stop_params: Dict[str, int]) -> int:
 
 def _get_vf(x: Any) -> float:
     if x["stop"]:
-        vf = 0
+        return 0
     else:
         if x["v_target_next"] >= x["v_target"]:
-            vf = x["v_target"]
+            return x["v_target"]
         else:
-            vf = x["v_target_next"]
-
-    return vf
+            return x["v_target_next"]
 
 
 def _get_trajectory(x: Any, step: float = 1.0, a_max: float = 2.0):
@@ -39,7 +37,7 @@ def _get_trajectory(x: Any, step: float = 1.0, a_max: float = 2.0):
     if np.abs(np.square(x[6]) - np.square(x[3])) / 2 > a_max * x[2]:
         vf = np.sqrt(2 * a_max * x[2] + np.square(x[3])) * 0.95
         v_target = vf
-    else:
+    else:  # else go with values from the table
         vf = x[6]
         v_target = x[4]
 

@@ -21,7 +21,6 @@ dynamic = ["version"]
 dependencies = [
     "numpy",
     "scipy",
-    "matplotlib",
     "geopandas"
 ]
 
