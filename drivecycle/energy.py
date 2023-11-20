@@ -77,9 +77,9 @@ def energy_model(
     df["power"] = df["Einst"].cumsum()
     df["soc"] = (df["Einst"] / -capacity).cumsum() * 100
 
-    df = df[["t1", "v1", "d1", "power", "soc"]][:-1]
+    df = df[["t1", "v1", "d1", "power", "soc"]][:-1] # remove last row because of shift
 
-    return np.vstack((np.zeros((1, 5)), df.to_numpy()))
+    return np.vstack((np.zeros((1, 5)), df.to_numpy())) # add row to zeros in first row 
 
 
 def battery_power(
